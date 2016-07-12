@@ -269,7 +269,7 @@ Return counts of instances based on keys you specify, over a date range.
 - `interval`: The resolution of the resulting buckets. See the "Notes" section for allowed intervals.
 - `callback`: callback takes the form of `(error, data)`
 
-An example to ask: "How many people whose names start with the letter "E" were created in the last month? Show me the answer in an hour resolution."
+An example to ask: **"How many people whose names start with the letter "E" were created in the last month? Show me the answer in an hour resolution."**
 
 ```js
 api.elasticsearch.aggregation(
@@ -301,7 +301,7 @@ Count up the unique instances grouped by the key you specify
 - `field`: The field that we want to count unique instances of.
 - `callback`: callback takes the form of `(error, data)`
 
-An example to ask: "How many people whose names start with the letter "E" were created in the last month? Show me how many unique firstNames there are."
+An example to ask: **"How many people whose names start with the letter "E" were created in the last month? Show me how many unique firstNames there are."**
 
 ```js
 api.elasticsearch.distinct(
@@ -326,7 +326,7 @@ Return the hydrated results from an array of guids.
 - `ids`: An array of GUIDs
 - `callback`: callback takes the form of `(error, data)`
 
-An example to ask: "Hydrate these guids: aaa, bbb, ccc"
+An example to ask: **"Hydrate these person's guids: aaa, bbb, ccc"**
 
 ```js
 api.elasticsearch.mget(
@@ -347,7 +347,7 @@ Load all results (regardless of pagination) which match a specific ElasticSearch
 - `fields`: The fields to return (or `*`)
 - `callback`: callback takes the form of `(error, data)`
 
-An example to ask: "How many people have the firstName Evan? Get me all of their email addresses."
+An example to ask: **"How many people have the firstName Evan? Get me all of their email addresses."**
 
 ```js
 api.elasticsearch.scroll(
@@ -372,7 +372,7 @@ Preform a paginated ElasticSearch query, returning the total results and the req
 - `sort`: How to order the result set (From the [ElasticSearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html)).
 - `callback`: callback takes the form of `(error, data)`
 
-An example to ask: "Show me instances #50-#100 of people whose first names start with the letter E.  Sort them by createdAt"
+An example to ask: **"Show me instances #50-#100 of people whose first names start with the letter E.  Sort them by createdAt"**
 
 ```js
 api.elasticsearch.search(
@@ -401,8 +401,9 @@ If you choose `'delay'`, then the request will be retried after a time defined b
 
 ## Notes:
 - `api.models` is where constructors for instances live, ie: `new api.models.person()`
-- `guid` is a unique primary key for all instances, and it is set to `_id` for the elasticsearch instance.
-- By default, all instances are expected to have a `createdAt` and `updatedAt` property at the top of the schema details.
+- `guid` is a unique primary key for all instances, and it is set to `_id` for the ElasticSearch instance.
+- By default, all instances will have a `createdAt` and `updatedAt` property at the top of the _source.
+- When searching, always use lower-case letters.  See the example analyzer for a hint at performing normal string searches.
 - For aggregations, the interval/format map is:
 ```js
 var format = 'yyyy-MM-dd';
