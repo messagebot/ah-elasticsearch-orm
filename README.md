@@ -2,6 +2,9 @@
 An Elasticsearch ORM for [ActionHero](http://www.actionherojs.com)
 
 ## Migrations and Defintions.
+
+![https://raw.githubusercontent.com/messagebot/ah-elasticsearch-orm/master/images/indexes.png](https://raw.githubusercontent.com/messagebot/ah-elasticsearch-orm/master/images/indexes.png)
+
 This tool will run migrations creating a new index for every month based on your definitions.  We will also apply an alias to each index in the group.  This allows you to easily scale your indexes, and have fine-grained control over deleting old data.  You define where your index definitions are located in your project via `api.config.elasticsearch.indexDefinitions`.
 
 For example, if you wanted to create a `"people"` index for your project, you might have:
