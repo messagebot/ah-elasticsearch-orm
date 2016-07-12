@@ -73,13 +73,13 @@ It is safe to run the migration more than once, as indexes which already exist w
 > npm run migrate
 
 > my-app@0.0.1 migrate:elasticsearch /Users/evan/PROJECTS/my-app
-> ah-elasticsaerch migrate
+> ah-elasticsearch-orm migrate
 
  -> index: development-people-2016-07 already exists
  -> creating index: development-people-2016-08
 ```
 
-From within your project, you can run `./node_modules/.bin/ah-elasticsaerch migrate` to run migrateion.  You can also make a short hand for this in your `scripts` section of your `package.json`, ie:
+From within your project, you can run `./node_modules/.bin/ah-elasticsearch-orm migrate` to run migrateion.  You can also make a short hand for this in your `scripts` section of your `package.json`, ie:
 ```json
 "scripts": {
     "help": "actionhero help",
@@ -87,8 +87,10 @@ From within your project, you can run `./node_modules/.bin/ah-elasticsaerch migr
     "actionhero": "actionhero",
     "startCluster": "actionhero startCluster",
     "console": "actionhero console",
+
+    "migrate": "ah-elasticsearch-orm migrate",
+
     "test": "NODE_ENV=test npm run migrate && NODE_ENV=test mocha",
-    "migrate": "ah-elasticsaerch migrate",
   }
 ```
 

@@ -27,6 +27,7 @@
     "dateformat": "^1.0.12",
     "elasticsearch": "^11.0.1",
     "node-uuid": "^1.4.7",
+    "optimist": "^0.6.1",
     "request": "^2.73.0"
   },
   "devDependencies": {
@@ -36,7 +37,7 @@
   },
   "optionalDependencies": {},
   "bin": {
-    "ah-elasticsaerch": "./bin/ah-elasticsaerch"
+    "ah-elasticsearch-orm": "./bin/ah-elasticsearch-orm"
   },
   "scripts": {
     "test": "mocha"

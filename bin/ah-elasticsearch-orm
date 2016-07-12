@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+var optimist = require('optimist');
+
+var action = 'help';
+if(optimist.argv._[0]){ action = optimist.argv._[0]; }
+
+var exit = function(error){
+  var returnCode = 0;
+  if(error){
+    logger(error);
+    returnCode = 1;
+  }
+
+  setTimeout(function(){
+    process.exit(returnCode);
+  }, 500);
+};
+
+var logger = function(msg){
+  if(require.main === module){ console.log(msg); }
+};
+
+logger('---------------------')
+logger('ah-elasticsearch-orm');
+logger('---------------------')
+
+try{
+  require(__dirname + '/actions/' + action + '.js')(logger, exit);
+}catch(e){
+  exit(new Error('`' + action + '` is not an action I can perform'));
+}
