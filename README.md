@@ -1,6 +1,8 @@
 # ah-elasticsearch-orm
 An Elasticsearch ORM for [ActionHero](http://www.actionherojs.com)
 
+## Migrations
+
 ## Instances
 
 ## Aggregations
