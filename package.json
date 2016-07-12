@@ -35,7 +35,7 @@
   },
   "optionalDependencies": {},
   "bin": {
-    "migrate": "./bin/migrate"
+    "ah-elasticsaerch": "./bin/ah-elasticsaerch"
   },
   "scripts": {
     "test": "mocha"
