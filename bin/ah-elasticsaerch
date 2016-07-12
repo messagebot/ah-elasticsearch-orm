@@ -39,7 +39,7 @@ var log = function(msg){
 };
 
 var migrate = function(api, callback){
-  var dir = path.normalize(api.projectRoot + api.config.elasticsearch.indexDefinitions);
+  var dir = path.normalize(api.config.elasticsearch.indexDefinitions);
   fs.readdirSync(dir).forEach(function(file){
     var nameParts = file.split("/");
     var name = nameParts[(nameParts.length - 1)].split(".")[0];
