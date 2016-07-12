@@ -79,7 +79,7 @@ It is safe to run the migration more than once, as indexes which already exist w
  -> creating index: development-people-2016-08
 ```
 
-From within your project, you can run `./node_modules/.bin/ah-elasticsearch-orm migrate` to run migrateion.  You can also make a short hand for this in your `scripts` section of your `package.json`, ie:
+From within your project, you can run `./node_modules/.bin/ah-elasticsearch-orm migrate` to run migration.  You can also make a short hand for this in your `scripts` section of your `package.json`, ie:
 ```json
 "scripts": {
     "help": "actionhero help",
@@ -115,7 +115,9 @@ Top level properties end up defined at the top level of the ElasticSearch instan
 ### Create
 Persists an instance to the database.  
 
-Note: If you provide a guid that already exists in the database, the `create` command will be changed to `edit`.  To match as loosely as possible, we'll only work with the first matching param as defined in `api.config.elasticsearch.uniqueFields[type]`.
+Notes:
+- You do not need to provide a `guid`.  If you don't one will be generated for you. Generated guids look like: `84da25219b3e47e793f1cab262088d22`, and are generated via `uuid.v4()` (and then stripped of spaces).
+- If you provide a guid that already exists in the database, the `create` command will be changed to `edit`.  To match as loosely as possible, we'll only work with the first matching param as defined in `api.config.elasticsearch.uniqueFields[type]`.
 
 Example create action:
 
@@ -127,10 +129,10 @@ exports.personCreate = {
   middleware:             [],
 
   inputs: {
-    guid:         { required: false },
-    data:         { required: true  },
-    source:       { required: true },
-    createdAt:    {
+    guid:      { required: false },
+    data:      { required: true  },
+    source:    { required: true  },
+    createdAt: {
       required: false,
       formatter: function(p){
         return new Date(parseInt(p));
@@ -140,9 +142,9 @@ exports.personCreate = {
 
   run: function(api, data, next){
     var person = new api.models.person();
-    if(data.params.guid){        person.data.guid = data.params.guid;               }
-    if(data.params.source){      person.data.source = data.params.source;           }
-    if(data.params.createdAt){   person.data.createdAt = data.params.createdAt;     }
+    if(data.params.guid){        person.data.guid = data.params.guid;           }
+    if(data.params.source){      person.data.source = data.params.source;       }
+    if(data.params.createdAt){   person.data.createdAt = data.params.createdAt; }
 
     for(var i in data.params.data){
       if(person.data[i] === null || person.data[i] === undefined){
@@ -159,9 +161,10 @@ exports.personCreate = {
 ```
 
 ### Edit
-Edit an existing instance which is saved in the database.
+Edit an existing instance which is saved to ElasticSearch.
 
-Note: To delete a property in the `data` hash, you can use the key `_delete`/  See the "special keys" section for more information.
+Notes:
+- To delete a property in the `data` hash, you can use the key `_delete`/  See the "special keys" section for more information.
 
 Example edit action:
 
@@ -173,9 +176,9 @@ exports.personEdit = {
   middleware:             [],
 
   inputs: {
-    guid:         { required: true },
-    source:       { required: false },
-    data:         { required: true  },
+    guid:   { required: true  },
+    source: { required: false },
+    data:   { required: true  },
   },
 
   run: function(api, data, next){
