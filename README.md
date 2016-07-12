@@ -382,6 +382,13 @@ api.elasticsearch.search(
 );
 ```
 
+## Rate Limiting
+This tool will rate limit how many pending requests to ElasticSearch you will allow.  Think of this like a very simple `threadpool`.  The maximum number of requests is defend at `api.config.elasticsearch.maxPendingOperations`.  Once that limit is hit, you have too options, defined by `api.config.elasticsearch.maxPendingOperationsBehavior`.  
+
+If you choose `'fail'`, then an exception will be returned.
+If you choose `'delay'`, then the request will be retried after a time defined by `api.config.elasticsearch.maxPendingOperationsSleep` (ms).
+
+
 ## Special Keys:
 - On an instance, setting a key to `_delete` will remove it, IE: `person.data.email = '_delete'; person.edit();`
 - On a search or aggregation, setting a searchKey to `_exists` will will search for simply the presence of that key (`searchKeys` and `searchValues`).

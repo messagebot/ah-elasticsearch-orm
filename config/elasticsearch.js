@@ -25,9 +25,6 @@ exports.default = {
         person: [
           'email',
           'guid',
-        ],
-        event: [
-          'guid',
         ]
       }
 
