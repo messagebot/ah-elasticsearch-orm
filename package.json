@@ -1,0 +1,43 @@
+{
+  "author": "Evan Tahler <evan@delicioushat.com>",
+  "name": "ah-elasticsearch-org",
+  "description": "An Elasticsearch ORM for ActionHero Projects.  Provides CRUD instance methods, finders, updates, and collection abstractions",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/messagebot/ah-elasticsearch-orm.git"
+  },
+  "keywords": [
+    "api",
+    "orm",
+    "elastic",
+    "elasticsearch",
+    "search",
+    "action",
+    "actionhero",
+    "database",
+    "analytics"
+  ],
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "async": "^1.5.2",
+    "dateformat": "^1.0.12",
+    "elasticsearch": "^11.0.1",
+    "node-uuid": "^1.4.7"
+  },
+  "devDependencies": {
+    "eslint": "^3.0.1",
+    "mocha": "^2.5.3",
+    "should": "^9.0.2"
+  },
+  "optionalDependencies": {},
+  "bin": {
+    "migrate": "./bin/migrate"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}

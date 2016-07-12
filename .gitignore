@@ -1,0 +1,15 @@
+# local actionhero files
+
+pids/*
+tmp/*
+log/*
+cache/*
+coverage/*
+node_modules/*
+
+# Node / NPM
+npm-debug.log
+
+# OS-specific wierdness
+.DS_Store
+.env
