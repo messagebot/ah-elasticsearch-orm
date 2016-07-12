@@ -43,7 +43,7 @@ module.exports = {
     ///////////////////////
     if(!api.models){ api.models = {} };
 
-    var dir = path.normalize(api.config.elasticsearch.aliasFiles);
+    var dir = path.normalize(api.config.elasticsearch.indexDefinitions);
 
     fs.readdirSync(dir).forEach(function(file){
       var nameParts = file.split("/");

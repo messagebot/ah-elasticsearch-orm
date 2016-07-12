@@ -7,7 +7,7 @@ exports.default = {
       urls: urls,
 
       // where are the alias/model files located in this project?
-      aliasFiles: api.projectRoot + '/db/elasticsearch/indexes',
+      indexDefinitions: api.projectRoot + '/db/elasticsearch/indexes',
 
       // how many pending ES operations should this server allow before taking a failure action?
       maxPendingOperations: 1000,
