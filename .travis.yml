@@ -13,13 +13,9 @@ os:
 
 script: npm run test
 
-env:
-  - "ES_VERSION=2.3.1"
-  # - "ES_VERSION=1.7.4"
-
 before_install:
-  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/$ES_VERSION/elasticsearch-$ES_VERSION.deb
-  - sudo dpkg -i --force-confnew elasticsearch-$ES_VERSION.deb
+  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.3.1/elasticsearch-2.3.1.deb
+  - sudo dpkg -i --force-confnew elasticsearch-2.3.1.deb
   - 'echo -e "index.number_of_shards: 1\nindex.number_of_replicas: 0" | sudo tee -a /etc/elasticsearch/elasticsearch.yml'
   - sudo service elasticsearch restart
   # ES needs some time to start
