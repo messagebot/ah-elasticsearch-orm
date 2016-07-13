@@ -18,6 +18,7 @@ var specHelper = {
   },
 
   build: function(callback){
+    var self = this;
     var jobs = [];
     var packgeJSON = path.normalize(__dirname + '/../../bin/templates/package.json');
     var commands = [
@@ -35,7 +36,7 @@ var specHelper = {
 
     if(process.env.SKIP_BUILD !== 'true'){
       commands.forEach(function(cmd){
-        jobs.push(function(done){ this.doBash(cmd, done); })
+        jobs.push(function(done){ self.doBash(cmd, done); })
       });
     }
 
