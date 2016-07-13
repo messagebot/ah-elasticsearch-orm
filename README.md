@@ -392,7 +392,7 @@ api.elasticsearch.search(
 );
 ```
 
-## Cahce
+## Cache
 As you can see above, most of the aggregations (except for scroll) have an optional cacheTime argument (ms).  This allows you to cache the results of popular or time-consuming ElasticSearch queries in redis.  If you do not pass this value in explicitly, the default as defined by `api.config.elasticsearch.cacheTime` will be used.  Set this to `0` to not use the cache at all.
 
 ## Rate Limiting
