@@ -30,7 +30,7 @@ exports.default = {
           'email',
           'guid',
         ]
-      }
+      },
 
       // Logger options for the elasticsearch client
       // More Information @ https://github.com/elastic/elasticsearch-js

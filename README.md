@@ -10,7 +10,7 @@ This tool will run migrations creating a new index for every month based on your
 For example, if you wanted to create a `"people"` index for your project, you might have:
 
 ```js
-// from ./db/elasticsearch/people.json
+// from ./db/elasticsearch/indexes/people.json
 
 module.exports = {
   "settings": {

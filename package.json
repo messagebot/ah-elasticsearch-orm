@@ -23,7 +23,7 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "async": "^1.5.2",
+    "async": "^2.0.0",
     "dateformat": "^1.0.12",
     "elasticsearch": "^11.0.1",
     "node-uuid": "^1.4.7",
@@ -40,6 +40,7 @@
     "ah-elasticsearch-orm": "./bin/ah-elasticsearch-orm"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "NODE_ENV=test mocha",
+    "test:skip-build": "SKIP_BUILD=true NODE_ENV=test mocha"
   }
 }
