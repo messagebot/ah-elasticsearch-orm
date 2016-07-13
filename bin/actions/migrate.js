@@ -62,7 +62,7 @@ var migrate = function(logger, callback){
             });
           });
         }else{
-          logger(' -> index: ' + i + ' already exists');
+          logger(' -> skipping index: ' + i + ', already exists');
         }
       });
 
