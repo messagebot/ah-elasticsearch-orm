@@ -256,7 +256,7 @@ exports.personDelete = {
 ### Aggregation
 Return counts of instances based on keys you specify, over a date range.
 
-`api.elasticsearch.aggregation(api, alias, searchKeys, searchValues, start, end, dateField, agg, aggField, interval, callback)`
+`api.elasticsearch.aggregation(api, alias, searchKeys, searchValues, start, end, dateField, agg, aggField, interval, cacheTime, callback)`
 - `api`: The API object.
 - `alias`: The Alias (or specific index) you want to search in
 - `searchKeys`: An array of keys you expect to search over.
@@ -267,6 +267,7 @@ Return counts of instances based on keys you specify, over a date range.
 - `agg`: The name of the aggregation (From the [ElasticSearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html))
 - `aggField`: The name of the field to group over.
 - `interval`: The resolution of the resulting buckets. See the "Notes" section for allowed intervals.
+- `cacheTime` How long to cache the results of this query for (ms) (optional)
 - `callback`: callback takes the form of `(error, data)`
 
 An example to ask: **"How many people whose names start with the letter "E" were created in the last month? Show me the answer in an hour resolution."**
@@ -290,7 +291,7 @@ api.elasticsearch.aggregation(
 ### Distinct
 Count up the unique instances grouped by the key you specify
 
-`api.elasticsearch.distinct(api, alias, searchKeys, searchValues, start, end, dateField, field, callback)`
+`api.elasticsearch.distinct(api, alias, searchKeys, searchValues, start, end, dateField, field, cacheTime, callback)`
 - `api`: The API object.
 - `alias`: The Alias (or specific index) you want to search in
 - `searchKeys`: An array of keys you expect to search over.
@@ -299,6 +300,7 @@ Count up the unique instances grouped by the key you specify
 - `end`: A Date object indicating the end range of dateField to search for.
 - `dateField`: The name of the top-level date key to search over.
 - `field`: The field that we want to count unique instances of.
+- `cacheTime` How long to cache the results of this query for (ms) (optional)
 - `callback`: callback takes the form of `(error, data)`
 
 An example to ask: **"How many people whose names start with the letter "E" were created in the last month? Show me how many unique firstNames there are."**
@@ -320,10 +322,11 @@ api.elasticsearch.distinct(
 ### Mget
 Return the hydrated results from an array of guids.
 
-`api.elasticsearch.mget(api, alias, ids, callback)`
+`api.elasticsearch.mget(api, alias, ids, cacheTime, callback)`
 - `api`: The API object.
 - `alias`: The Alias (or specific index) you want to search in
 - `ids`: An array of GUIDs
+- `cacheTime` How long to cache the results of this query for (ms) (optional)
 - `callback`: callback takes the form of `(error, data)`
 
 An example to ask: **"Hydrate these person's guids: aaa, bbb, ccc"**
@@ -340,7 +343,7 @@ api.elasticsearch.mget(
 ### Scroll
 Load all results (regardless of pagination) which match a specific ElasticSearch query.
 
-`api.elasticsearch.scroll(api, alias, query, fields, callback)`
+`api.elasticsearch.scroll(api, alias, query, fields, cacheTime, callback)`
 - `api`: The API object.
 - `alias`: The Alias (or specific index) you want to search in
 - `query`: The ElasticSearch query to return the results of
@@ -362,7 +365,7 @@ api.elasticsearch.scroll(
 ### Search
 Preform a paginated ElasticSearch query, returning the total results and the requested ordered and paginated segment.
 
-`api.elasticsearch.search(api, alias, searchKeys, searchValues, from, size, sort, callback)`
+`api.elasticsearch.search(api, alias, searchKeys, searchValues, from, size, sort, cacheTime, callback)`
 - `api`: The API object.
 - `alias`: The Alias (or specific index) you want to search in
 - `searchKeys`: An array of keys you expect to search over.
@@ -370,6 +373,7 @@ Preform a paginated ElasticSearch query, returning the total results and the req
 - `from`: The starting ID of the result set (offset).
 - `size`: The number of results to return (limit).
 - `sort`: How to order the result set (From the [ElasticSearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html)).
+- `cacheTime` How long to cache the results of this query for (ms) (optional)
 - `callback`: callback takes the form of `(error, data)`
 
 An example to ask: **"Show me instances #50-#100 of people whose first names start with the letter E.  Sort them by createdAt"**
@@ -383,16 +387,19 @@ api.elasticsearch.search(
   50,
   50,
   { "createdAt" : {"order" : "asc"}}
+  1000,
   callback
 );
 ```
+
+## Cahce
+As you can see above, most of the aggregations (except for scroll) have an optional cacheTime argument (ms).  This allows you to cache the results of popular or time-consuming ElasticSearch queries in redis.  If you do not pass this value in explicitly, the default as defined by `api.config.elasticsearch.cacheTime` will be used.  Set this to `0` to not use the cache at all.
 
 ## Rate Limiting
 This tool will rate limit how many pending requests to ElasticSearch you will allow.  Think of this like a very simple `threadpool`.  The maximum number of requests is defend at `api.config.elasticsearch.maxPendingOperations`.  Once that limit is hit, you have too options, defined by `api.config.elasticsearch.maxPendingOperationsBehavior`.  
 
 If you choose `'fail'`, then an exception will be returned.
 If you choose `'delay'`, then the request will be retried after a time defined by `api.config.elasticsearch.maxPendingOperationsSleep` (ms).
-
 
 ## Special Keys:
 - On an instance, setting a key to `_delete` will remove it, IE: `person.data.email = '_delete'; person.edit();`

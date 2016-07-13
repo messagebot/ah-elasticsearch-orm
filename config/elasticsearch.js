@@ -18,6 +18,10 @@ exports.default = {
       // if maxPendingOperationsBehavior === 'delay', how long should we wait before trying again (ms)?
       maxPendingOperationsSleep: 500,
 
+      // Aggregate methods (search. scroll, etc) can have thier results cached.
+      // If you don't provide this option to your query, the default defined here will be used (ms)/
+      cacheTime: (1000 * 10),
+
       // When creating a new instance of an ElasticsSearch Model, we ensure that there is not already an instnace with these "unique keys"
       // This is done by fist searching for instances of the same type with these keys
       // If an object is found, we transform the `create` call into an `edit` call
