@@ -3,7 +3,7 @@ var path  = require('path');
 var async = require('async');
 var exec  = require('child_process').exec;
 
-exports.specHelper = {
+var specHelper = {
   // testDir: '/tmp/ah-elasticsearch-orm',
   testDir: os.tmpDir() + '/ah-elasticsearch-orm',
   projectDir: path.normalize(__dirname + '/..'),
@@ -58,3 +58,5 @@ exports.specHelper = {
     self.actionhero.stop(callback);
   },
 };
+
+exports.specHelper = specHelper;
