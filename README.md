@@ -280,7 +280,7 @@ Return counts of instances based on keys you specify, over a date range.
 - `aggField`: The name of the field to group over.
 - `interval`: The resolution of the resulting buckets. See the "Notes" section for allowed intervals.
 - `cacheTime` How long to cache the results of this query for (ms) (optional)
-- `callback`: callback takes the form of `(error, data)`
+- `callback`: callback takes the form of `(error, data, fromCache)`
 
 An example to ask: **"How many people whose names start with the letter "E" were created in the last month? Show me the answer in an hour resolution."**
 
@@ -313,7 +313,7 @@ Count up the unique instances grouped by the key you specify
 - `dateField`: The name of the top-level date key to search over.
 - `field`: The field that we want to count unique instances of.
 - `cacheTime` How long to cache the results of this query for (ms) (optional)
-- `callback`: callback takes the form of `(error, data)`
+- `callback`: callback takes the form of `(error, data, fromCache)`
 
 An example to ask: **"How many people whose names start with the letter "E" were created in the last month? Show me how many unique firstNames there are."**
 
@@ -339,7 +339,7 @@ Return the hydrated results from an array of guids.
 - `alias`: The Alias (or specific index) you want to search in
 - `ids`: An array of GUIDs
 - `cacheTime` How long to cache the results of this query for (ms) (optional)
-- `callback`: callback takes the form of `(error, data)`
+- `callback`: callback takes the form of `(error, data, fromCache)`
 
 An example to ask: **"Hydrate these person's guids: aaa, bbb, ccc"**
 
@@ -354,6 +354,7 @@ api.elasticsearch.mget(
 
 ### Scroll
 Load all results (regardless of pagination) which match a specific ElasticSearch query.
+Note: This aggregation is never cached.
 
 `api.elasticsearch.scroll(api, alias, query, fields, cacheTime, callback)`
 - `api`: The API object.
@@ -386,7 +387,7 @@ Preform a paginated ElasticSearch query, returning the total results and the req
 - `size`: The number of results to return (limit).
 - `sort`: How to order the result set (From the [ElasticSearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html)).
 - `cacheTime` How long to cache the results of this query for (ms) (optional)
-- `callback`: callback takes the form of `(error, data)`
+- `callback`: callback takes the form of `(error, data, totalResults, fromCache)`
 
 An example to ask: **"Show me instances #50-#100 of people whose first names start with the letter E.  Sort them by createdAt"**
 
