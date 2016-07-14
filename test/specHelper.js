@@ -75,7 +75,7 @@ var specHelper = {
       function(done){ self.flush(done); },
       function(done){ self.refresh(done); },
       // TOOD: Why doesn't FLUSH + REFERSH force index to be in sync?
-      function(done){ console.log('(sleeping for commit)'); done(); },
+      function(done){ console.log('....................(sleeping for commit)'); done(); },
       function(done){ setTimeout(done, 10001) },
     ], callback);
 },
