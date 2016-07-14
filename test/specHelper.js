@@ -37,9 +37,11 @@ var specHelper = {
     ];
 
     if(process.env.SKIP_BUILD !== 'true'){
+      jobs.push(function(done){ console.log('-------- BUILDING PROJECT --------'); done(); })
       commands.forEach(function(cmd){
         jobs.push(function(done){ self.doBash(cmd, done); })
       });
+      jobs.push(function(done){ console.log('-------- BUILD COMPLETE --------\r\n'); done(); })
     }
 
     jobs.push(function(done){
@@ -105,5 +107,10 @@ var specHelper = {
     return email + '@fake.com';
   },
 };
+
+before(function(done){
+  this.timeout(1000 * 60);
+  specHelper.buildOnce(done);
+});
 
 exports.specHelper = specHelper;

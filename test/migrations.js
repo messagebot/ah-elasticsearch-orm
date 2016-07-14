@@ -11,11 +11,6 @@ describe('ah-elasticsearch-orm', function(){
   describe('migrations', function(){
 
     before(function(done){
-      this.timeout(1000 * 60);
-      specHelper.buildOnce(done);
-    });
-
-    before(function(done){
       this.timeout(1000 * 30);
       specHelper.start(function(){
         api = specHelper.api;
