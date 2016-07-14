@@ -120,7 +120,7 @@ Ensure that uniqueFields are also required by your mapping by defining the field
 
 ### Warning!
 
-Elasticsearch is a *search* tool; and is eventually consistent.  It is great for storing massive amounts of data, but some of the normal database semantics (like unique primary keys) which you might expert are not available.  This tool attempts to do some data integrity checks, but rapid creation of instances with similar keys will result in conflicting data.  We rely on EalsticSearch's search tools to check if a GUID is already in use, but it takes time for new objects to become availalbe to the search. More data can be found [here](https://www.elastic.co/guide/en/elasticsearch/guide/current/near-real-time.html) and [here](https://www.elastic.co/guide/en/elasticsearch/guide/current/translog.html).
+Elasticsearch is a *search* tool; and is eventually consistent.  It is great for storing massive amounts of data, but some of the normal database semantics (like unique primary keys) which you might expect are not available.  This tool attempts to do some data integrity checks, but rapid creation of instances with similar keys will result in conflicting data.  We rely on EalsticSearch's search tools to check if a GUID is already in use, but it takes time for new objects to become availalbe to the search. More data can be found [here](https://www.elastic.co/guide/en/elasticsearch/guide/current/near-real-time.html) and [here](https://www.elastic.co/guide/en/elasticsearch/guide/current/translog.html).
 
 ### Create
 Persists an instance to the database.  
@@ -409,7 +409,7 @@ api.elasticsearch.search(
 As you can see above, most of the aggregations (except for scroll) have an optional cacheTime argument (ms).  This allows you to cache the results of popular or time-consuming ElasticSearch queries in redis.  If you do not pass this value in explicitly, the default as defined by `api.config.elasticsearch.cacheTime` will be used.  Set this to `0` to not use the cache at all.
 
 ## Rate Limiting
-This tool will rate limit how many pending requests to ElasticSearch you will allow.  Think of this like a very simple `threadpool`.  The maximum number of requests is defend at `api.config.elasticsearch.maxPendingOperations`.  Once that limit is hit, you have too options, defined by `api.config.elasticsearch.maxPendingOperationsBehavior`.  
+This tool will rate limit how many pending requests to ElasticSearch you will allow.  Think of this like a very simple `threadpool`.  The maximum number of requests is defend at `api.config.elasticsearch.maxPendingOperations`.  Once that limit is hit, you have 2 options, defined by `api.config.elasticsearch.maxPendingOperationsBehavior`.  
 
 If you choose `'fail'`, then an exception will be returned.
 If you choose `'delay'`, then the request will be retried after a time defined by `api.config.elasticsearch.maxPendingOperationsSleep` (ms).
@@ -418,6 +418,7 @@ If you choose `'delay'`, then the request will be retried after a time defined b
 - On an instance, setting a key to `_delete` will remove it, IE: `person.data.email = '_delete'; person.edit();`
 - On a search or aggregation, setting a searchKey to `_exists` will will search for simply the presence of that key (`searchKeys` and `searchValues`).
 - On a search or aggregation, setting a searchKey to `_missing` will will search for simply the missing status of that key (`searchKeys` and `searchValues`).
+- On a search or aggregation, setting a searchKey to a string which contains `"*"` will trigger a wildcard search rather than a term search.
 
 ## Notes:
 - `api.models` is where constructors for instances live, ie: `new api.models.person()`
