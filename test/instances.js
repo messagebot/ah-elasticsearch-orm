@@ -118,7 +118,7 @@ describe('ah-elasticsearch-orm', function(){
       async.series(jobs, done);
     });
 
-    it('can create an with a provided guid', function(done){
+    it('can create an instance with a provided guid', function(done){
       var jobs = [];
       var person;
       var guid = 'abc123' + new Date().getTime();
@@ -149,7 +149,7 @@ describe('ah-elasticsearch-orm', function(){
       async.series(jobs, done);
     });
 
-    it('will fail when creating a duplicte object by guid', function(done){
+    it('will fail when creating a duplicte instance by guid', function(done){
       var jobs = [];
       var person, person2;
 
