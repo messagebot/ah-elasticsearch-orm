@@ -61,7 +61,7 @@ var specHelper = {
 
   refresh: function(callback){
     var self = this;
-    self.doBash('curl -X POST http://localhost:9200/_refresh', callback, true)
+    self.doBash('curl -X POST http://localhost:9200/_refresh?wait_for_ongoing', callback, true)
   },
 
   flush: function(callback){
@@ -75,6 +75,7 @@ var specHelper = {
       function(done){ self.flush(done); },
       function(done){ self.refresh(done); },
       // TOOD: Why doesn't FLUSH + REFERSH force index to be in sync?
+      function(done){ console.log('(sleeping for commit)'); done(); },
       function(done){ setTimeout(done, 10001) },
     ], callback);
 },

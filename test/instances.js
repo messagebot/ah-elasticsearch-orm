@@ -33,7 +33,7 @@ describe('ah-elasticsearch-orm', function(){
     specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
   });
 
-  beforeEach(function(done){ specHelper.ensureWrite(done); });
+  beforeEach(function(done){ specHelper.flush(done); });
 
   after(function(done){
     specHelper.stop(done);
