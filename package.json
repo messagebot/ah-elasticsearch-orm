@@ -2,7 +2,7 @@
   "author": "Evan Tahler <evan@delicioushat.com>",
   "name": "ah-elasticsearch-orm",
   "description": "An Elasticsearch ORM for ActionHero Projects.  Provides CRUD instance methods, finders, updates, and collection abstractions",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
