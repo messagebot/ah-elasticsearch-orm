@@ -33,12 +33,6 @@ module.exports = {
         "guid":        { "type": "string"  },
         "source":      { "type": "string"  },
         "data":        { "type": "object" },
-
-        "location":    {
-          "type": "geo_point",
-          "geohash_precision": (process.env.GEOHASH_PRECISION || "1km")
-        },
-
         "createdAt":   { "type":  "date" },
         "updatedAt":   { "type":  "date" }
       }

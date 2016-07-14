@@ -8,10 +8,11 @@ var specHelper = {
   testDir: os.tmpDir() + '/ah-elasticsearch-orm',
   projectDir: path.normalize(__dirname + '/..'),
 
-  doBash: function(commands, callback){
+  doBash: function(commands, callback, silent){
+    if(!silent){ silent = false; }
     if(!Array.isArray(commands)){ commands = [commands]; }
     var fullCommand = '/bin/bash -c \'' + commands.join(' && ') + '\'';
-    console.log('>> ' + fullCommand);
+    if(!silent){ console.log('>> ' + fullCommand); }
     exec(fullCommand, function(error, data){
       callback(error, data);
     });
@@ -41,6 +42,11 @@ var specHelper = {
     }
 
     async.series(jobs, callback);
+  },
+
+  refresh: function(callback){
+    var self = this;
+    self.doBash('curl -X POST http://localhost:9200/_refresh', callback, true)
   },
 
   start: function(callback){
