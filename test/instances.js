@@ -164,7 +164,11 @@ describe('ah-elasticsearch-orm', function(){
         person2.data.guid = person.data.guid;
         person2.data.source = 'web';
         person2.create(function(error){
-          error.message.should.containEql('[document_already_exists_exception] [person]');
+          if(process.env.ES_VERSION === '1.7.4'){
+            error.message.should.containEql('DocumentAlreadyExistsException');
+          }else{
+            error.message.should.containEql('[document_already_exists_exception] [person]');
+          }
           done();
         });
       });
