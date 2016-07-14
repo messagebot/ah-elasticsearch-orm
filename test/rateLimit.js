@@ -97,7 +97,7 @@ describe('ah-elasticsearch-orm', function(){
 
     it('rate limits (retry)', function(done){
       api.config.elasticsearch.maxPendingOperations = 2;
-      api.config.elasticsearch.maxPendingOperationsSleep = 1000;
+      api.config.elasticsearch.maxPendingOperationsSleep = 5000;
       api.config.elasticsearch.maxPendingOperationsBehavior = 'retry';
 
       // 3 at once
@@ -125,8 +125,9 @@ describe('ah-elasticsearch-orm', function(){
         errors.length.should.equal(0);
         deltas.sort(function(a,b){ return a < b; });
         deltas.length.should.equal(3);
-        (deltas[0] - deltas[1]).should.be.greaterThan(999);
-        (deltas[0] - deltas[2]).should.be.greaterThan(999);
+        // the %2 is because travis is really slow :(
+        (deltas[0] - deltas[1]).should.be.greaterThan(5000/2);
+        (deltas[0] - deltas[2]).should.be.greaterThan(5000/2);
         done();
       });
     });
