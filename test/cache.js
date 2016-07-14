@@ -7,6 +7,7 @@ var now = new Date();
 var thisMonth = dateformat(now, 'yyyy-mm');
 var nextMonth = dateformat(new Date( now.getTime() + (1000 * 60 * 60 * 24 * 30) ), 'yyyy-mm');
 var api;
+var guids = [];
 
 describe('ah-elasticsearch-orm', function(){
   describe('cache', function(){
@@ -42,6 +43,7 @@ describe('ah-elasticsearch-orm', function(){
           person.data.email = specHelper.email();
           person.create(function(error){
             if(error){ errors.push(error); }
+            guids.push(person.data.guid);
             next();
           });
         });
@@ -52,86 +54,128 @@ describe('ah-elasticsearch-orm', function(){
 
     before(function(done){ specHelper.ensureWrite(done); });
 
+    beforeEach(function(done){ api.redis.clients.client.flushdb(); done(); });
+
     after(function(done){
       specHelper.stop(done);
     });
 
-    it('can get new data', function(done){
-      api.elasticsearch.search(api, 'test-people', ['email'], ['_exists'], 0, 10, null, 1, function(error, data, totalHits, fromCache){
-        should.not.exist(error);
-        data.length.should.equal(10);
-        totalHits.should.equal(10);
-        fromCache.should.equal(false);
-        done();
-      });
-    });
+    [
 
-    it('can load cached data', function(done){
-      var jobs = [];
+      { method: 'search',      args: ['test-people', ['email'], ['_exists'], 0, 10, null, 1000] },
+      { method: 'mget',        args: ['test-people', guids, 1000] },
+      { method: 'distinct',    args: ['test-people', ['email'], ['_exists'], new Date(0), new Date(new Date().getTime() + (1000 * 60 * 5)), 'createdAt', 'guid', 1000] },
+      { method: 'aggregation', args: ['test-people', ['email'], ['_exists'], new Date(0), new Date(new Date().getTime() + (1000 * 60 * 5)), 'createdAt', 'date_histogram', 'createdAt', 'hour', 1000] },
 
-      jobs.push(function(next){
-        api.elasticsearch.search(api, 'test-people', ['email'], ['_exists'], 1, 10, null, 5000, function(error, data, totalHits, fromCache){
+    ].forEach(function(q){
+
+      it('#' + q.method + ': can get new data', function(done){
+        var callback = function(){
+          var error = arguments[0]; var data = arguments[1]; var fromCache = arguments[(arguments.length - 1)];
           should.not.exist(error);
+          if(data.buckets){
+            data.buckets[0].doc_count.should.be.greaterThan(0);
+          }else{
+            data.length.should.equal(10);
+          }
           fromCache.should.equal(false);
-          next();
-        });
+          done();
+        };
+
+        api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
       });
 
-      jobs.push(function(next){
-        api.elasticsearch.search(api, 'test-people', ['email'], ['_exists'], 1, 10, null, 5000, function(error, data, totalHits, fromCache){
-          should.not.exist(error);
-          fromCache.should.equal(true);
-          next();
+      it('#' + q.method + ': can load cached data', function(done){
+        var jobs = [];
+
+        jobs.push(function(next){
+          var callback = function(){
+            var error = arguments[0]; var data = arguments[1]; var fromCache = arguments[(arguments.length - 1)];
+
+            should.not.exist(error);
+            fromCache.should.equal(false);
+            next();
+          }
+
+          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
         });
+
+        jobs.push(function(next){
+          var callback = function(){
+            var error = arguments[0]; var data = arguments[1]; var fromCache = arguments[(arguments.length - 1)];
+
+            should.not.exist(error);
+            fromCache.should.equal(true);
+            next();
+          }
+
+          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+        });
+
+        async.series(jobs, done);
       });
 
-      async.series(jobs, done);
-    });
+      it('#' + q.method + ': cached data will expire', function(done){
+        var jobs = [];
 
-    it('cached data will expire', function(done){
-      var jobs = [];
+        jobs.push(function(next){
+          var callback = function(){
+            var error = arguments[0]; var data = arguments[1]; var fromCache = arguments[(arguments.length - 1)];
 
-      jobs.push(function(next){
-        api.elasticsearch.search(api, 'test-people', ['email'], ['_exists'], 2, 10, null, 1000, function(error, data, totalHits, fromCache){
-          should.not.exist(error);
-          fromCache.should.equal(false);
-          next();
+            should.not.exist(error);
+            fromCache.should.equal(false);
+            next();
+          }
+
+          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
         });
+
+        jobs.push(function(next){ setTimeout(next, 1001) });
+
+        jobs.push(function(next){
+          var callback = function(){
+            var error = arguments[0]; var data = arguments[1]; var fromCache = arguments[(arguments.length - 1)];
+
+            should.not.exist(error);
+            fromCache.should.equal(false);
+            next();
+          }
+
+          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+        });
+
+        async.series(jobs, done);
       });
 
-      jobs.push(function(next){ setTimeout(next, 1001) });
+      it('#' + q.method + ': will use default cache configuration when none is provided', function(done){
+        var jobs = [];
 
-      jobs.push(function(next){
-        api.elasticsearch.search(api, 'test-people', ['email'], ['_exists'], 2, 10, null, 1000, function(error, data, totalHits, fromCache){
-          should.not.exist(error);
-          fromCache.should.equal(false);
-          next();
+        jobs.push(function(next){
+          var callback = function(){
+            var error = arguments[0]; var data = arguments[1]; var fromCache = arguments[(arguments.length - 1)];
+
+            should.not.exist(error);
+            fromCache.should.equal(false);
+            next();
+          }
+
+          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
         });
-      });
 
-      async.series(jobs, done);
-    });
+        jobs.push(function(next){
+          var callback = function(){
+            var error = arguments[0]; var data = arguments[1]; var fromCache = arguments[(arguments.length - 1)];
 
-    it('will use default cache configuration when none is provided', function(done){
-      var jobs = [];
+            should.not.exist(error);
+            fromCache.should.equal(true);
+            next();
+          }
 
-      jobs.push(function(next){
-        api.elasticsearch.search(api, 'test-people', ['email'], ['_exists'], 5, 10, null, null, function(error, data, totalHits, fromCache){
-          should.not.exist(error);
-          fromCache.should.equal(false);
-          next();
+          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
         });
-      });
 
-      jobs.push(function(next){
-        api.elasticsearch.search(api, 'test-people', ['email'], ['_exists'], 5, 10, null, null, function(error, data, totalHits, fromCache){
-          should.not.exist(error);
-          fromCache.should.equal(true);
-          next();
-        });
+        async.series(jobs, done);
       });
-
-      async.series(jobs, done);
     });
   });
 });
