@@ -7,6 +7,7 @@ var specHelper = {
   // testDir: '/tmp/ah-elasticsearch-orm',
   testDir: os.tmpDir() + '/ah-elasticsearch-orm',
   projectDir: path.normalize(__dirname + '/..'),
+  built: false,
 
   doBash: function(commands, callback, silent){
     if(!silent){ silent = false; }
@@ -41,7 +42,21 @@ var specHelper = {
       });
     }
 
+    jobs.push(function(done){
+      self.built = true;
+      done();
+    })
+
     async.series(jobs, callback);
+  },
+
+  buildOnce: function(callback){
+    var self = this;
+    if(self.built === false){
+      self.build(callback);
+    }else{
+      return callback();
+    }
   },
 
   refresh: function(callback){

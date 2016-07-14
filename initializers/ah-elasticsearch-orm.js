@@ -16,6 +16,7 @@ var elasticsearchModel = require(__dirname + '/../lib/elasticsearchModel.js');
 module.exports = {
   loadPriority:  100,
   startPriority: 100,
+  stopPriority:  999,
 
   initialize: function(api, next){
 
