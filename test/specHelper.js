@@ -95,6 +95,15 @@ var specHelper = {
     var self = this;
     self.actionhero.stop(callback);
   },
+
+  email: function(){
+    var email = '';
+    var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+    for( var i=0; i < 10; i++ ){
+      email += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return email + '@fake.com';
+  },
 };
 
 exports.specHelper = specHelper;

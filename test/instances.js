@@ -5,41 +5,32 @@ var specHelper = require(__dirname + '/specHelper.js').specHelper;
 var index = 'test-people-' + dateformat(new Date(), 'yyyy-mm');
 var api;
 
-function email(){
-  var email = '';
-  var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
-  for( var i=0; i < 10; i++ ){
-    email += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return email + '@fake.com';
-};
-
 describe('ah-elasticsearch-orm', function(){
-
-  before(function(done){
-    this.timeout(1000 * 60);
-    specHelper.buildOnce(done);
-  });
-
-  before(function(done){
-    this.timeout(1000 * 30);
-    specHelper.start(function(){
-      api = specHelper.api;
-      done();
-    });
-  });
-
-  before(function(done){
-    specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
-  });
-
-  beforeEach(function(done){ specHelper.flush(done); });
-
-  after(function(done){
-    specHelper.stop(done);
-  });
-
   describe('instances', function(){
+
+    before(function(done){
+      this.timeout(1000 * 60);
+      specHelper.buildOnce(done);
+    });
+
+    before(function(done){
+      this.timeout(1000 * 30);
+      specHelper.start(function(){
+        api = specHelper.api;
+        done();
+      });
+    });
+
+    before(function(done){
+      specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
+    });
+
+    beforeEach(function(done){ specHelper.flush(done); });
+
+    after(function(done){
+      specHelper.stop(done);
+    });
+
     it('can create and hydrate an instnace (simple)', function(done){
       var jobs = [];
       var person;
@@ -47,7 +38,7 @@ describe('ah-elasticsearch-orm', function(){
       jobs.push(function(next){
         person = new api.models.person();
         person.data.source = 'web';
-        person.data.email = email();
+        person.data.email = specHelper.email();
         person.create(function(error){
           should.not.exist(error);
           person.data.guid.should.exist;
@@ -88,7 +79,7 @@ describe('ah-elasticsearch-orm', function(){
       jobs.push(function(next){
         person = new api.models.person();
         person.data.source = 'web';
-        person.data.email = email();
+        person.data.email = specHelper.email();
         person.data.createdAt = new Date(100);
         person.data.data = {
           thing: 'stuff',
@@ -136,7 +127,7 @@ describe('ah-elasticsearch-orm', function(){
         person = new api.models.person();
         person.data.guid = guid;
         person.data.source = 'web';
-        person.data.email = email();
+        person.data.email = specHelper.email();
         person.create(function(error){
           should.not.exist(error);
           person.data.guid.should.equal(guid);
@@ -165,7 +156,7 @@ describe('ah-elasticsearch-orm', function(){
       jobs.push(function(next){
         person = new api.models.person();
         person.data.source = 'web';
-        person.data.email = email();
+        person.data.email = specHelper.email();
         person.create(function(error){
           should.not.exist(error);
           next();
@@ -195,7 +186,7 @@ describe('ah-elasticsearch-orm', function(){
     it('#create will fail is uniqueFields is violated', function(done){
       var jobs = [];
       var person, person2;
-      var e = email();
+      var e = specHelper.email();
 
       jobs.push(function(next){
         person = new api.models.person();
@@ -261,7 +252,7 @@ describe('ah-elasticsearch-orm', function(){
       jobs.push(function(next){
         person = new api.models.person();
         person.data.source = 'web';
-        person.data.email = email();
+        person.data.email = specHelper.email();
         person.create(next);
       });
 
@@ -297,7 +288,7 @@ describe('ah-elasticsearch-orm', function(){
         person = new api.models.person();
         person.data.source = 'web';
         person.data.data = {a : 1};
-        person.data.email = email();
+        person.data.email = specHelper.email();
         person.create(next);
       });
 
@@ -331,8 +322,8 @@ describe('ah-elasticsearch-orm', function(){
       var jobs = [];
       var person, person2;
 
-      var e1 = email();
-      var e2 = email();
+      var e1 = specHelper.email();
+      var e2 = specHelper.email();
 
       jobs.push(function(next){
         person = new api.models.person();

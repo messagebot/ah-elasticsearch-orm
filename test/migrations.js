@@ -8,25 +8,25 @@ var nextMonth = dateformat(new Date( now.getTime() + (1000 * 60 * 60 * 24 * 30) 
 var api;
 
 describe('ah-elasticsearch-orm', function(){
-
-  before(function(done){
-    this.timeout(1000 * 60);
-    specHelper.buildOnce(done);
-  });
-
-  before(function(done){
-    this.timeout(1000 * 30);
-    specHelper.start(function(){
-      api = specHelper.api;
-      done();
-    });
-  });
-
-  after(function(done){
-    specHelper.stop(done);
-  });
-
   describe('migrations', function(){
+
+    before(function(done){
+      this.timeout(1000 * 60);
+      specHelper.buildOnce(done);
+    });
+
+    before(function(done){
+      this.timeout(1000 * 30);
+      specHelper.start(function(){
+        api = specHelper.api;
+        done();
+      });
+    });
+
+    after(function(done){
+      specHelper.stop(done);
+    });
+
     before(function(done){
       specHelper.doBash('curl -X DELETE http://localhost:9200/test-people-' + thisMonth + ' && curl -X DELETE http://localhost:9200/test-people-' + nextMonth + ' && sleep 5', done, true);
     })
