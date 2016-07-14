@@ -116,7 +116,11 @@ Instances take the form:
 
 Top level properties end up defined at the top level of the ElasticSearch instance's `_source`.  Anything else can be added to `_source.data`.  This allows some parts of your schema to be flexible **and** other parts to have a rigid type and schema.  Top level properties are required when creating a new instance.
 
-Ensure that uniqueFields are also required by your mapping by defining the field at the top level.  Top level properties of your index will be required for all models. 
+Ensure that uniqueFields are also required by your mapping by defining the field at the top level.  Top level properties of your index will be required for all models.
+
+### Warning!
+
+Elasticsearch is a *search* tool; and is eventually consistent.  It is great for storing massive amounts of data, but some of the normal database semantics (like unique primary keys) which you might expert are not available.  This tool attempts to do some data integrity checks, but rapid creation of instances with similar keys will result in conflicting data.  We rely on EalsticSearch's search tools to check if a GUID is already in use, but it takes time for new objects to become availalbe to the search. More data can be found [here](https://www.elastic.co/guide/en/elasticsearch/guide/current/near-real-time.html) and [here](https://www.elastic.co/guide/en/elasticsearch/guide/current/translog.html).
 
 ### Create
 Persists an instance to the database.  
