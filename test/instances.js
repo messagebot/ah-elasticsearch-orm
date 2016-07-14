@@ -5,6 +5,15 @@ var specHelper = require(__dirname + '/specHelper.js').specHelper;
 var index = 'test-people-' + dateformat(new Date(), 'yyyy-mm');
 var api;
 
+function email(){
+  var email = '';
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for( var i=0; i < 10; i++ ){
+    email += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return email + '@fake.com';
+};
+
 describe('ah-elasticsearch-orm', function(){
 
   before(function(done){
@@ -24,18 +33,23 @@ describe('ah-elasticsearch-orm', function(){
     specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
   });
 
+  beforeEach(function(done){
+    specHelper.refresh(done);
+  })
+
   after(function(done){
     specHelper.stop(done);
   });
 
   describe('instances', function(){
-    it('can create an instnace (simple)', function(done){
+    it('can create and hydrate an instnace (simple)', function(done){
       var jobs = [];
       var person;
 
       jobs.push(function(next){
         person = new api.models.person();
         person.data.source = 'web';
+        person.data.email = email();
         person.create(function(error){
           should.not.exist(error);
           person.data.guid.should.exist;
@@ -69,13 +83,14 @@ describe('ah-elasticsearch-orm', function(){
       });
     });
 
-    it('can create an instnace (complex data)', function(done){
+    it('can create and hydrate an instnace (complex data)', function(done){
       var jobs = [];
       var person;
 
       jobs.push(function(next){
         person = new api.models.person();
         person.data.source = 'web';
+        person.data.email = email();
         person.data.createdAt = new Date(100);
         person.data.data = {
           thing: 'stuff',
@@ -117,12 +132,13 @@ describe('ah-elasticsearch-orm', function(){
     it('can create an with a provided guid', function(done){
       var jobs = [];
       var person;
-      var guid = 'abc123';
+      var guid = 'abc123' + new Date().getTime();
 
       jobs.push(function(next){
         person = new api.models.person();
         person.data.guid = guid;
         person.data.source = 'web';
+        person.data.email = email();
         person.create(function(error){
           should.not.exist(error);
           person.data.guid.should.equal(guid);
@@ -151,6 +167,7 @@ describe('ah-elasticsearch-orm', function(){
       jobs.push(function(next){
         person = new api.models.person();
         person.data.source = 'web';
+        person.data.email = email();
         person.create(function(error){
           should.not.exist(error);
           next();
@@ -163,27 +180,29 @@ describe('ah-elasticsearch-orm', function(){
         person2 = new api.models.person();
         person2.data.guid = person.data.guid;
         person2.data.source = 'web';
+        person2.data.email = 'a@fake.com';
         person2.create(function(error){
           if(process.env.ES_VERSION === '1.7.4'){
             error.message.should.containEql('DocumentAlreadyExistsException');
           }else{
             error.message.should.containEql('[document_already_exists_exception] [person]');
           }
-          done();
+          next();
         });
       });
 
       async.series(jobs, done);
     });
 
-    it('can detect if an instance exists via uniqueFields when creating and update it instead', function(done){
+    it('#create will fail is uniqueFields is violated', function(done){
+      this.timeout(20 * 1000);
       var jobs = [];
       var person, person2;
+      var e = email();
 
       jobs.push(function(next){
         person = new api.models.person();
-        person.data.email = 'a@fake.com';
-        person.data.a = 1;
+        person.data.email = e;
         person.data.source = 'web';
         person.create(function(error){
           should.not.exist(error);
@@ -195,10 +214,32 @@ describe('ah-elasticsearch-orm', function(){
 
       jobs.push(function(next){
         person2 = new api.models.person();
-        person2.data.email = 'a@fake.com';
+        person2.data.email = e;
         person2.data.source = 'web';
-        person2.data.b = 2;
         person2.create(function(error){
+          error.message.should.containEql('uniqueFields:email uniqueness violated via');
+          next();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
+    it('can delete an instnace', function(done){
+      var jobs = [];
+      var person;
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.source = 'web';
+        person.data.email = 'a@fake.com';
+        person.create(next);
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        person.del(function(error){
           should.not.exist(error);
           next();
         });
@@ -208,28 +249,120 @@ describe('ah-elasticsearch-orm', function(){
 
       jobs.push(function(next){
         person.hydrate(function(error){
-          should.not.exist(error);
-          person.data.data.a.should.equal(1);
-          person.data.data.b.should.equal(2);
+          error.message.should.equal('person (' + person.data.guid + ') not found')
           next();
-        });
-      });
-
-      jobs.push(function(next){
-        api.elasticsearch.distinct(api, 'test-people', ['guid'], [person.data.guid], new Date(0), new Date(), 'createdAt', 'guid', 0, function(error, data){
-          should.not.exist(error);
-          data.buckets.length.should.equal(1);
-          done();
         });
       });
 
       async.series(jobs, done);
     });
 
-    it('can delete an instnace')
-    it('can edit an instnace')
-    it('can hydrate an instnace (simple)')
-    it('can hydrate an instnace (complex data)')
+    it('can edit an instnace (simple)', function(done){
+      var jobs = [];
+      var person;
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.source = 'web';
+        person.data.email = email();
+        person.create(next);
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        person.data.source = 'iphone';
+        person.edit(function(error){
+          should.not.exist(error);
+          next();
+        });
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        var p2 = new api.models.person(person.data.guid);
+        p2.hydrate(function(error){
+          should.not.exist(error);
+          p2.data.source.should.equal('iphone');
+          next();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
+    it('can edit an instnace (_delete keyword)', function(done){
+      var jobs = [];
+      var person;
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.source = 'web';
+        person.data.data = {a : 1};
+        person.data.email = email();
+        person.create(next);
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        person.data.data.a = '_delete';
+        person.data.data.b = 2;
+        person.edit(function(error){
+          should.not.exist(error);
+          next();
+        });
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        var p2 = new api.models.person(person.data.guid);
+        p2.hydrate(function(error){
+          should.not.exist(error);
+          should.not.exist(p2.data.data.a);
+          p2.data.data.b.should.equal(2);
+          next();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
+    it('can edit an instnace (blocked by uniqueFields)', function(done){
+      var jobs = [];
+      var person, person2;
+
+      var e1 = email();
+      var e2 = email();
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.source = 'web';
+        person.data.email = e1;
+        person.create(next);
+      });
+
+      jobs.push(function(next){
+        person2 = new api.models.person();
+        person2.data.source = 'web';
+        person2.data.email = e2;
+        person2.create(next);
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        person.data.email = e2;
+        person.edit(function(error){
+          error.message.should.containEql('uniqueFields:email uniqueness violated via #' + person2.data.guid);
+          next();
+        });
+      });
+
+      async.series(jobs, done);
+    });
   });
 
 });

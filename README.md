@@ -49,7 +49,8 @@ module.exports = {
       "properties": {
         "guid":        { "type": "string"  },
         "source":      { "type": "string"  },
-        "data":        { "type": "object" },
+        "email":       { "type": "string"  },
+        "data":        { "type": "object"  },
 
         "location":    {
           "type": "geo_point",
@@ -115,12 +116,15 @@ Instances take the form:
 
 Top level properties end up defined at the top level of the ElasticSearch instance's `_source`.  Anything else can be added to `_source.data`.  This allows some parts of your schema to be flexible **and** other parts to have a rigid type and schema.  Top level properties are required when creating a new instance.
 
+Ensure that uniqueFields are also required by your mapping by defining the field at the top level.  Top level properties of your index will be required for all models. 
+
 ### Create
 Persists an instance to the database.  
 
 Notes:
 - You do not need to provide a `guid`.  If you don't one will be generated for you. Generated guids look like: `84da25219b3e47e793f1cab262088d22`, and are generated via `uuid.v4()` (and then stripped of spaces).
-- If you provide a guid that already exists in the database, the `create` command will be changed to `edit`.  To match as loosely as possible, we'll only work with the first matching param as defined in `api.config.elasticsearch.uniqueFields[type]`.
+- If you provide a guid that already exists in the database, the command will fail.
+- If you provide data which would conflict with `api.config.elasticsearch.uniqueFields[type]`, the command will fail.
 
 Example create action:
 
@@ -167,6 +171,7 @@ exports.personCreate = {
 Edit an existing instance which is saved to ElasticSearch.
 
 Notes:
+- If you provide data which would conflict with `api.config.elasticsearch.uniqueFields[type]`, the command will fail.
 - To delete a property in the `data` hash, you can use the key `_delete`/  See the "special keys" section for more information.
 
 Example edit action:
