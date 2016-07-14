@@ -20,6 +20,10 @@ describe('ah-elasticsearch-orm', function(){
     });
   });
 
+  before(function(done){
+    specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
+  });
+
   after(function(done){
     specHelper.stop(done);
   });

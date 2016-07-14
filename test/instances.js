@@ -20,6 +20,10 @@ describe('ah-elasticsearch-orm', function(){
     });
   });
 
+  before(function(done){
+    specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
+  });
+
   after(function(done){
     specHelper.stop(done);
   });
@@ -110,9 +114,114 @@ describe('ah-elasticsearch-orm', function(){
       async.series(jobs, done);
     });
 
-    it('can create an with a provided guid');
+    it('can create an with a provided guid', function(done){
+      var jobs = [];
+      var person;
+      var guid = 'abc123';
 
-    it('can detect if an instnace exists when creating and update it instead')
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.guid = guid;
+        person.data.source = 'web';
+        person.create(function(error){
+          should.not.exist(error);
+          person.data.guid.should.equal(guid);
+          next();
+        });
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        var p2 = new api.models.person(guid);
+        p2.hydrate(function(error){
+          should.not.exist(error);
+          p2.data.guid.should.equal(guid);
+          next();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
+    it('will fail when creating a duplicte object by guid', function(done){
+      var jobs = [];
+      var person, person2;
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.source = 'web';
+        person.create(function(error){
+          should.not.exist(error);
+          next();
+        });
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        person2 = new api.models.person();
+        person2.data.guid = person.data.guid;
+        person2.data.source = 'web';
+        person2.create(function(error){
+          error.message.should.containEql('[document_already_exists_exception] [person]');
+          done();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
+    it('can detect if an instance exists via uniqueFields when creating and update it instead', function(done){
+      var jobs = [];
+      var person, person2;
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.email = 'a@fake.com';
+        person.data.a = 1;
+        person.data.source = 'web';
+        person.create(function(error){
+          should.not.exist(error);
+          next();
+        });
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        person2 = new api.models.person();
+        person2.data.email = 'a@fake.com';
+        person2.data.source = 'web';
+        person2.data.b = 2;
+        person2.create(function(error){
+          should.not.exist(error);
+          next();
+        });
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+
+      jobs.push(function(next){
+        person.hydrate(function(error){
+          should.not.exist(error);
+          person.data.data.a.should.equal(1);
+          person.data.data.b.should.equal(2);
+          next();
+        });
+      });
+
+      jobs.push(function(next){
+        api.elasticsearch.distinct(api, 'test-people', ['guid'], [person.data.guid], new Date(0), new Date(), 'createdAt', 'guid', 0, function(error, data){
+          should.not.exist(error);
+          data.buckets.length.should.equal(1);
+          done();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
     it('can delete an instnace')
     it('can edit an instnace')
     it('can hydrate an instnace (simple)')
