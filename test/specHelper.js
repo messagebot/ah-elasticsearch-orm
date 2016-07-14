@@ -64,6 +64,21 @@ var specHelper = {
     self.doBash('curl -X POST http://localhost:9200/_refresh', callback, true)
   },
 
+  flush: function(callback){
+    var self = this;
+    self.doBash('curl -X POST http://localhost:9200/_flush?wait_for_ongoing', callback, true)
+  },
+
+  ensureWrite: function(callback){
+    var self = this;
+    async.series([
+      function(done){ self.flush(done); },
+      function(done){ self.refresh(done); },
+      // TOOD: Why doesn't FLUSH + REFERSH force index to be in sync?
+      function(done){ setTimeout(done, 10001) },
+    ], callback);
+},
+
   start: function(callback){
     var self = this;
     var actionheroPrototype = require(self.testDir + '/node_modules/actionhero/actionhero.js').actionheroPrototype;

@@ -7,7 +7,7 @@ var api;
 
 function email(){
   var email = '';
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
   for( var i=0; i < 10; i++ ){
     email += possible.charAt(Math.floor(Math.random() * possible.length));
   }
@@ -33,9 +33,7 @@ describe('ah-elasticsearch-orm', function(){
     specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
   });
 
-  beforeEach(function(done){
-    specHelper.refresh(done);
-  })
+  beforeEach(function(done){ specHelper.ensureWrite(done); });
 
   after(function(done){
     specHelper.stop(done);
@@ -195,7 +193,6 @@ describe('ah-elasticsearch-orm', function(){
     });
 
     it('#create will fail is uniqueFields is violated', function(done){
-      this.timeout(20 * 1000);
       var jobs = [];
       var person, person2;
       var e = email();
@@ -210,7 +207,7 @@ describe('ah-elasticsearch-orm', function(){
         });
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
+      jobs.push(function(next){ specHelper.ensureWrite(next); });
 
       jobs.push(function(next){
         person2 = new api.models.person();
@@ -351,7 +348,7 @@ describe('ah-elasticsearch-orm', function(){
         person2.create(next);
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
+      jobs.push(function(next){ specHelper.ensureWrite(next); });
 
       jobs.push(function(next){
         person.data.email = e2;
