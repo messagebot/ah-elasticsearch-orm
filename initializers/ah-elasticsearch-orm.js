@@ -79,7 +79,7 @@ module.exports = {
         api.log('Connected to ElasticSearch');
         api.elasticsearch.client.info({}, function(error, info){
           var semverParts = info.version.number.split('.');
-          if(semverParts[0] < 5){ return next(new Error('ElasticSearch version >= 2.0.0 required')) }
+          if(semverParts[0] < 2){ return next(new Error('ElasticSearch version >= 2.0.0 required')) }
           api.elasticsearch.info = info;
           next();
         });
