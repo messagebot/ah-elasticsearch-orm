@@ -360,6 +360,29 @@ api.elasticsearch.mget(
 );
 ```
 
+### Count
+Return the number of instances in the index/alias, optionally filtered by a query.
+
+`api.elasticsearch.count(api, alias, searchKeys, searchValues, cacheTime, callback)`
+- `api`: The API object.
+- `alias`: The Alias (or specific index) you want to search in
+- `searchKeys`: An array of keys you expect to search over (can be null).
+- `searchValues`: An array of the values you want to exist for searchKeys (can be null).
+- `cacheTime` How long to cache the results of this query for (ms) (optional)
+- `callback`: callback takes the form of `(error, count, fromCache)`
+
+An example to ask: **"How many people are there with an E first name?"**
+
+```js
+api.elasticsearch.mget(
+  api,
+  'people',
+  ['data.firstName'],
+  ['e*'],
+  callback
+);
+```
+
 ### Scroll
 Load all results (regardless of pagination) which match a specific ElasticSearch query.
 Note: This aggregation is never cached.

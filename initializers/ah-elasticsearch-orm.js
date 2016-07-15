@@ -7,6 +7,7 @@ var client = require(__dirname + '/../lib/client.js');
 
 var search      = require(__dirname + '/../lib/aggregate/search.js');
 var mget        = require(__dirname + '/../lib/aggregate/mget.js');
+var count       = require(__dirname + '/../lib/aggregate/count.js');
 var scroll      = require(__dirname + '/../lib/aggregate/scroll.js');
 var distinct    = require(__dirname + '/../lib/aggregate/distinct.js');
 var aggregation = require(__dirname + '/../lib/aggregate/aggregation.js');
@@ -31,6 +32,7 @@ module.exports = {
       // aggregate functions
       search:      search,
       mget:        mget,
+      count:       count,
       scroll:      scroll,
       distinct:    distinct,
       aggregation: aggregation,

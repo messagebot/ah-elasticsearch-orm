@@ -59,6 +59,7 @@ describe('ah-elasticsearch-orm', function(){
 
       { method: 'search',      args: ['test-people', ['email'], ['_exists'], 0, 10, null, 1000] },
       { method: 'mget',        args: ['test-people', guids, 1000] },
+      { method: 'count',       args: ['test-people', ['email'], ['_exists'], 1000] },
       { method: 'distinct',    args: ['test-people', ['email'], ['_exists'], new Date(0), new Date(new Date().getTime() + (1000 * 60 * 5)), 'createdAt', 'guid', 1000] },
       { method: 'aggregation', args: ['test-people', ['email'], ['_exists'], new Date(0), new Date(new Date().getTime() + (1000 * 60 * 5)), 'createdAt', 'date_histogram', 'createdAt', 'hour', 1000] },
 
@@ -70,6 +71,8 @@ describe('ah-elasticsearch-orm', function(){
           should.not.exist(error);
           if(data.buckets){
             data.buckets[0].doc_count.should.be.greaterThan(0);
+          }else if (typeof data === 'number'){
+            data.should.equal(10);
           }else{
             data.length.should.equal(10);
           }

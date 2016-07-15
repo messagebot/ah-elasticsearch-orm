@@ -53,7 +53,7 @@ describe('ah-elasticsearch-orm', function(){
       specHelper.stop(done);
     });
 
-    it('aggregation (full)', function(done){
+    it('#aggregation (full)', function(done){
       api.elasticsearch.aggregation(api, 'test-people', ['email'], ['_exists'], new Date(0), new Date(), 'createdAt', 'date_histogram', 'createdAt', 'hour', function(error, data, fromCache){
         should.not.exist(error);
         fromCache.should.equal(false);
@@ -65,7 +65,7 @@ describe('ah-elasticsearch-orm', function(){
       });
     });
 
-    it('aggregation (empty)', function(done){
+    it('#aggregation (empty)', function(done){
       api.elasticsearch.aggregation(api, 'test-people', ['email'], ['_exists'], new Date(), new Date(), 'createdAt', 'date_histogram', 'createdAt', 'hour', function(error, data, fromCache){
         should.not.exist(error);
         fromCache.should.equal(false);
@@ -74,7 +74,7 @@ describe('ah-elasticsearch-orm', function(){
       });
     });
 
-    it('mget (full)', function(done){
+    it('#mget (full)', function(done){
       api.elasticsearch.mget(api, 'test-people', guids, function(error, data, fromCache){
         should.not.exist(error);
         fromCache.should.equal(false);
@@ -86,14 +86,41 @@ describe('ah-elasticsearch-orm', function(){
       });
     });
 
-    it('mget (empty)', function(done){
+    it('#mget (empty)', function(done){
       api.elasticsearch.mget(api, 'test-people', [], function(error, data, fromCache){
         error.message.should.containEql('no documents to get');
         done();
       });
     });
 
-    it('scroll (full)', function(done){
+    it('#count (no query)', function(done){
+      api.elasticsearch.count(api, 'test-people', null, null, function(error, count, fromCache){
+        should.not.exist(error);
+        fromCache.should.equal(false);
+        count.should.equal(10);
+        done();
+      });
+    });
+
+    it('#count (with query)', function(done){
+      api.elasticsearch.count(api, 'test-people', ['email'], ['_exists'], function(error, count, fromCache){
+        should.not.exist(error);
+        fromCache.should.equal(false);
+        count.should.equal(10);
+        done();
+      });
+    });
+
+    it('#count (empty)', function(done){
+      api.elasticsearch.count(api, 'test-people', ['email'], ['missing@missing.com'], function(error, count, fromCache){
+        should.not.exist(error);
+        fromCache.should.equal(false);
+        count.should.equal(0);
+        done();
+      });
+    });
+
+    it('#scroll (full)', function(done){
       var query = {
         "query": {
           "bool": {
@@ -121,7 +148,7 @@ describe('ah-elasticsearch-orm', function(){
       });
     });
 
-    it('scroll (empty)', function(done){
+    it('#scroll (empty)', function(done){
       var query = {
         "query": {
           "bool": {
@@ -144,7 +171,7 @@ describe('ah-elasticsearch-orm', function(){
       });
     });
 
-    it('search (full)', function(done){
+    it('#search (full)', function(done){
       api.elasticsearch.search(api, 'test-people', ['email'], ['_exists'], 0, 10, null, function(error, data, totalHits, fromCache){
         should.not.exist(error);
         fromCache.should.equal(false);
@@ -154,7 +181,7 @@ describe('ah-elasticsearch-orm', function(){
       });
     });
 
-    it('search (empty)', function(done){
+    it('#search (empty)', function(done){
       api.elasticsearch.search(api, 'test-people', ['email'], ['not_found'], 0, 10, null, function(error, data, totalHits, fromCache){
         should.not.exist(error);
         fromCache.should.equal(false);

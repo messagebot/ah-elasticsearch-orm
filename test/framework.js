@@ -1,8 +1,6 @@
 var async      = require('async');
 var should     = require('should');
-var dateformat = require('dateformat');
 var specHelper = require(__dirname + '/specHelper.js').specHelper;
-var index = 'test-people-' + dateformat(new Date(), 'yyyy-mm');
 var api;
 
 describe('ah-elasticsearch-orm', function(){
@@ -36,5 +34,4 @@ describe('ah-elasticsearch-orm', function(){
     });
 
   });
-
 });
