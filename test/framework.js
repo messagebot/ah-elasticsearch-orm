@@ -28,6 +28,13 @@ describe('ah-elasticsearch-orm', function(){
       });
     });
 
+    it('has loaded cluster info', function(done){
+      should.exist(api.elasticsearch.info.name);
+      var semverParts = api.elasticsearch.info.version.number.split('.');
+      semverParts[0].should.be.aboveOrEqual(2);
+      done();
+    });
+
   });
 
 });

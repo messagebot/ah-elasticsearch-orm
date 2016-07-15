@@ -275,6 +275,31 @@ describe('ah-elasticsearch-orm', function(){
       async.series(jobs, done);
     });
 
+    it('can edit an instnace (with delay for uniqueFiled check)', function(done){
+      var jobs = [];
+      var person;
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.source = 'web';
+        person.data.email = specHelper.email();
+        person.create(next);
+      });
+
+      jobs.push(function(next){ specHelper.refresh(next); });
+      jobs.push(function(next){ specHelper.ensureWrite(next); });
+
+      jobs.push(function(next){
+        person.data.source = 'iphone';
+        person.edit(function(error){
+          should.not.exist(error);
+          next();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
     it('can edit an instnace (_delete keyword)', function(done){
       var jobs = [];
       var person;
