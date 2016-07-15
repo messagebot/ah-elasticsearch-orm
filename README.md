@@ -4,6 +4,14 @@ An Elasticsearch ORM for [ActionHero](http://www.actionherojs.com)
 [![Build Status](https://travis-ci.org/messagebot/ah-elasticsearch-orm.svg?branch=master)](https://travis-ci.org/messagebot/ah-elasticsearch-orm)
 [![NPM Version](https://img.shields.io/npm/v/ah-elasticsearch-orm.svg?style=flat-square)](https://www.npmjs.com/package/ah-elasticsearch-orm)
 
+## Versions Supported
+
+| Sorftware     | Version   |
+|---------------|-----------|
+| ActionHero    | >= 14.0.0 |
+| Node.JS       | >=4.0.0   |
+| ElasticSearch | >= 2.0.0  |
+
 ## Migrations and Defintions.
 
 ![https://raw.githubusercontent.com/messagebot/ah-elasticsearch-orm/master/images/indexes.png](https://raw.githubusercontent.com/messagebot/ah-elasticsearch-orm/master/images/indexes.png)
