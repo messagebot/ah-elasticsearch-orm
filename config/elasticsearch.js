@@ -24,8 +24,8 @@ exports.default = {
 
       // When creating a new instance of an ElasticsSearch Model, we ensure that there is not already an instnace with these "unique keys"
       // This is done by fist searching for instances of the same type with these keys
-      // Ensure that uniqueFields are also required by your mapping by defining the field at the top level
-      // If an object is found, we transform the `create` call into an `edit` call
+      // These uniqueFields can be either at the top level of your object or part of the data hash
+      // If an object is found, a failure will be returned
       uniqueFields: {
         person: [
           'email',
