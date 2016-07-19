@@ -3,6 +3,7 @@ var fs         = require('fs');
 var async      = require('async');
 var dateformat = require('dateformat');
 var request    = require('request');
+var prefix     = process.env.PREFIX;
 
 var migrate = function(logger, callback){
 
@@ -34,6 +35,8 @@ var migrate = function(logger, callback){
         payload.aliases[(api.env + '-' + alias)] = payload.aliases[alias];
         delete payload.aliases[alias];
       }
+
+      if(prefix && prefix.length > 0){ name = prefix + '-' + name; }
 
       indexes[api.env + '-' + name + '-' + thisMonth] = payload;
       indexes[api.env + '-' + name + '-' + nextMonth] = payload;
