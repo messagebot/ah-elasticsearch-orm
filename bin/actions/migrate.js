@@ -32,14 +32,19 @@ var migrate = function(logger, callback){
       var payload = require(dir + '/' + file);
 
       for(var alias in payload.aliases){
-        payload.aliases[(api.env + '-' + alias)] = payload.aliases[alias];
+        if(prefix && prefix.length > 0){
+          payload.aliases[(prefix + '-' + api.env + '-' + alias)] = payload.aliases[alias];
+        }else{
+          payload.aliases[(api.env + '-' + alias)] = payload.aliases[alias];
+        }
         delete payload.aliases[alias];
       }
 
-      if(prefix && prefix.length > 0){ name = prefix + '-' + name; }
+      var indexNameBase =  api.env + '-' + name;
+      if(prefix && prefix.length > 0){ indexNameBase = prefix + '-' + indexNameBase; }
 
-      indexes[api.env + '-' + name + '-' + thisMonth] = payload;
-      indexes[api.env + '-' + name + '-' + nextMonth] = payload;
+      indexes[indexNameBase + '-' + thisMonth] = payload;
+      indexes[indexNameBase + '-' + nextMonth] = payload;
     });
 
     var migrationJobs = [];
