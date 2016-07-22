@@ -15,21 +15,16 @@ describe('ah-elasticsearch-orm', function(){
   describe('rate-limit', function(){
 
     before(function(done){
-      this.timeout(1000 * 30);
-      specHelper.start(function(){
-        api = specHelper.api;
-        orignals.maxPendingOperationsBehavior = api.config.elasticsearch.maxPendingOperationsBehavior;
-        orignals.maxPendingOperationsSleep = api.config.elasticsearch.maxPendingOperationsSleep;
-        orignals.maxPendingOperations = api.config.elasticsearch.maxPendingOperations;
-        done();
-      });
+      api = specHelper.api;
+      orignals.maxPendingOperationsBehavior = api.config.elasticsearch.maxPendingOperationsBehavior;
+      orignals.maxPendingOperationsSleep = api.config.elasticsearch.maxPendingOperationsSleep;
+      orignals.maxPendingOperations = api.config.elasticsearch.maxPendingOperations;
+      done();
     });
 
     before(function(done){
       specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
     });
-
-    beforeEach(function(done){ specHelper.flush(done); });
 
     afterEach(function(done){
       api.config.elasticsearch.maxPendingOperationsBehavior = orignals.maxPendingOperationsBehavior;

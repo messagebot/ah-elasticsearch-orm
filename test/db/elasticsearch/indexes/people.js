@@ -1,6 +1,6 @@
 module.exports = {
   "settings": {
-    "number_of_shards": parseInt(process.env.NUMBER_OF_SHARDS || 10),
+    "number_of_shards": parseInt(process.env.NUMBER_OF_SHARDS || 1),
     "number_of_replicas": parseInt(process.env.NUMBER_OF_REPLICAS || 0),
   },
 
@@ -11,7 +11,7 @@ module.exports = {
         "source":      { "type": "string" },
         "email":       {
           "type" : "string",
-          "index" : "not_analyzed" 
+          "index" : "not_analyzed"
         },
         "data":        { "type": "object" },
         "createdAt":   { "type":  "date"  },
