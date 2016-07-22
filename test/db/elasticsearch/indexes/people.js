@@ -14,7 +14,7 @@ module.exports = {
           "index" : "not_analyzed"
         },
         "data":        { "type": "object", "required": true },
-        "nmae":        { "type": "string", "required": false },
+        "name":        { "type": "string", "required": false },
         "createdAt":   { "type":  "date",  "required": true  },
         "updatedAt":   { "type":  "date",  "required": true  }
       }

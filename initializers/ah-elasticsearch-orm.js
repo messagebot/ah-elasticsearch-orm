@@ -55,6 +55,7 @@ module.exports = {
       api.elasticsearch.indexes[api.env + '-' + name] = data;
       var modelName = Object.keys(data.mappings)[0];
       var requiredFields = [];
+      var topLevelFields = Object.keys(data.mappings[modelName].properties);
       Object.keys(data.mappings[modelName].properties).forEach(function(field){
         var props = data.mappings[modelName].properties[field];
         if(props.required === 'true' || props.required === true || props.required === null || props.required === undefined){
@@ -67,6 +68,7 @@ module.exports = {
         if(!alias){ alias = api.env + '-' + name; }
         api.elasticsearch.elasticsearchModel.call(this, api, modelName, guid, index, alias);
         this.requiredFields = requiredFields;
+        this.topLevelFields = topLevelFields;
       };
 
       util.inherits(thisInstance, elasticsearchModel);

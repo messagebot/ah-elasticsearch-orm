@@ -125,6 +125,33 @@ describe('ah-elasticsearch-orm', function(){
       async.series(jobs, done);
     });
 
+    it('can save top-level but non-required data', function(done){
+      var jobs = [];
+      var person, p2;
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.source = 'web';
+        person.data.name = 'Evan';
+        person.data.email = specHelper.email();
+        person.create(function(error){
+          should.not.exist(error);
+          next();
+        });
+      });
+
+      jobs.push(function(next){
+        p2 = new api.models.person(person.data.guid);
+        person.hydrate(function(error){
+          should.not.exist(error);
+          person.data.name.should.equal('Evan');
+          next();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
     it('will fail when creating a duplicte instance by guid', function(done){
       var jobs = [];
       var person, person2;
