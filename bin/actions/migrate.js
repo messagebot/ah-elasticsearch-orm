@@ -31,6 +31,14 @@ var migrate = function(logger, callback){
       delete require.cache[require.resolve(dir + '/' + file)];
       var payload = require(dir + '/' + file);
 
+      // strip out custom data we've added to the payload
+      for(var t in payload.mappings){
+        for(var p in payload.mappings[t].properties){
+          var property = payload.mappings[t].properties[p];
+          delete property.required;
+        }
+      }
+
       for(var alias in payload.aliases){
         if(prefix && prefix.length > 0){
           payload.aliases[(prefix + '-' + api.env + '-' + alias)] = payload.aliases[alias];

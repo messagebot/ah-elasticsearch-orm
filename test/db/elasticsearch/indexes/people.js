@@ -7,15 +7,16 @@ module.exports = {
   "mappings": {
     "person": {
       "properties": {
-        "guid":        { "type": "string" },
-        "source":      { "type": "string" },
+        "guid":        { "type": "string", "required": true },
+        "source":      { "type": "string", "required": true },
         "email":       {
           "type" : "string",
           "index" : "not_analyzed"
         },
-        "data":        { "type": "object" },
-        "createdAt":   { "type":  "date"  },
-        "updatedAt":   { "type":  "date"  }
+        "data":        { "type": "object", "required": true },
+        "nmae":        { "type": "string", "required": false },
+        "createdAt":   { "type":  "date",  "required": true  },
+        "updatedAt":   { "type":  "date",  "required": true  }
       }
     }
   },
