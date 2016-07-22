@@ -9,19 +9,8 @@ var api;
 
 describe('ah-elasticsearch-orm', function(){
   describe('migrations', function(){
-
-    before(function(done){
-      this.timeout(1000 * 30);
-      specHelper.start(function(){
-        api = specHelper.api;
-        done();
-      });
-    });
-
-    after(function(done){
-      specHelper.stop(done);
-    });
-
+    before(function(){ api = specHelper.api; });
+    
     before(function(done){
       specHelper.doBash('curl -X DELETE http://localhost:9200/test-people-' + thisMonth + ' && curl -X DELETE http://localhost:9200/test-people-' + nextMonth + ' && sleep 5', done, true);
     })

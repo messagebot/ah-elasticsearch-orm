@@ -61,27 +61,6 @@ var specHelper = {
     }
   },
 
-  refresh: function(callback){
-    var self = this;
-    self.doBash('curl -X POST http://localhost:9200/_refresh?wait_for_ongoing', callback, true)
-  },
-
-  flush: function(callback){
-    var self = this;
-    self.doBash('curl -X POST http://localhost:9200/_flush?wait_for_ongoing', callback, true)
-  },
-
-  ensureWrite: function(callback){
-    var self = this;
-    async.series([
-      function(done){ self.flush(done); },
-      function(done){ self.refresh(done); },
-      // TOOD: Why doesn't FLUSH + REFERSH force index to be in sync?
-      function(done){ console.log('....................(sleeping for commit)'); done(); },
-      function(done){ setTimeout(done, 10001) },
-    ], callback);
-},
-
   start: function(callback){
     var self = this;
     var actionheroPrototype = require(self.testDir + '/node_modules/actionhero/actionhero.js').actionheroPrototype;
@@ -112,5 +91,9 @@ before(function(done){
   this.timeout(1000 * 60);
   specHelper.buildOnce(done);
 });
+
+/*--- Start up the server ---*/
+before(function(done){ specHelper.start(done); });
+after(function(done){ specHelper.stop(done); });
 
 exports.specHelper = specHelper;

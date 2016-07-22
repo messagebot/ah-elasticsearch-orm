@@ -7,23 +7,10 @@ var api;
 
 describe('ah-elasticsearch-orm', function(){
   describe('instances', function(){
-
-    before(function(done){
-      this.timeout(1000 * 30);
-      specHelper.start(function(){
-        api = specHelper.api;
-        done();
-      });
-    });
+    before(function(){ api = specHelper.api; });
 
     before(function(done){
       specHelper.doBash('NODE_ENV=test cd ' + specHelper.testDir + '  && ./node_modules/ah-elasticsearch-orm/bin/ah-elasticsearch-orm migrate', done, true);
-    });
-
-    beforeEach(function(done){ specHelper.flush(done); });
-
-    after(function(done){
-      specHelper.stop(done);
     });
 
     it('can create and hydrate an instnace (simple)', function(done){
@@ -40,8 +27,6 @@ describe('ah-elasticsearch-orm', function(){
           next();
         });
       });
-
-      jobs.push(function(next){ specHelper.refresh(next); });
 
       jobs.push(function(next){
         var p2 = new api.models.person(person.data.guid);
@@ -88,8 +73,6 @@ describe('ah-elasticsearch-orm', function(){
         });
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
-
       jobs.push(function(next){
         var p2 = new api.models.person(person.data.guid);
         p2.hydrate(function(error){
@@ -130,8 +113,6 @@ describe('ah-elasticsearch-orm', function(){
         });
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
-
       jobs.push(function(next){
         var p2 = new api.models.person(guid);
         p2.hydrate(function(error){
@@ -158,19 +139,13 @@ describe('ah-elasticsearch-orm', function(){
         });
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
-
       jobs.push(function(next){
         person2 = new api.models.person();
         person2.data.guid = person.data.guid;
         person2.data.source = 'web';
         person2.data.email = 'a@fake.com';
         person2.create(function(error){
-          if(process.env.ES_VERSION === '1.7.4'){
-            error.message.should.containEql('DocumentAlreadyExistsException');
-          }else{
-            error.message.should.containEql('[document_already_exists_exception] [person]');
-          }
+          error.message.should.equal('uniqueFields:guid uniqueness violated via #' + person.data.guid);
           next();
         });
       });
@@ -182,6 +157,7 @@ describe('ah-elasticsearch-orm', function(){
       var jobs = [];
       var person, person2;
       var e = specHelper.email();
+      // var e = 'blockingemail@fake.com';
 
       jobs.push(function(next){
         person = new api.models.person();
@@ -192,8 +168,6 @@ describe('ah-elasticsearch-orm', function(){
           next();
         });
       });
-
-      jobs.push(function(next){ specHelper.ensureWrite(next); });
 
       jobs.push(function(next){
         person2 = new api.models.person();
@@ -219,16 +193,12 @@ describe('ah-elasticsearch-orm', function(){
         person.create(next);
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
-
       jobs.push(function(next){
         person.del(function(error){
           should.not.exist(error);
           next();
         });
       });
-
-      jobs.push(function(next){ specHelper.refresh(next); });
 
       jobs.push(function(next){
         person.hydrate(function(error){
@@ -251,8 +221,6 @@ describe('ah-elasticsearch-orm', function(){
         person.create(next);
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
-
       jobs.push(function(next){
         person.data.source = 'iphone';
         person.edit(function(error){
@@ -260,8 +228,6 @@ describe('ah-elasticsearch-orm', function(){
           next();
         });
       });
-
-      jobs.push(function(next){ specHelper.refresh(next); });
 
       jobs.push(function(next){
         var p2 = new api.models.person(person.data.guid);
@@ -286,9 +252,6 @@ describe('ah-elasticsearch-orm', function(){
         person.create(next);
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
-      jobs.push(function(next){ specHelper.ensureWrite(next); });
-
       jobs.push(function(next){
         person.data.source = 'iphone';
         person.edit(function(error){
@@ -312,8 +275,6 @@ describe('ah-elasticsearch-orm', function(){
         person.create(next);
       });
 
-      jobs.push(function(next){ specHelper.refresh(next); });
-
       jobs.push(function(next){
         person.data.data.a = '_delete';
         person.data.data.b = 2;
@@ -322,8 +283,6 @@ describe('ah-elasticsearch-orm', function(){
           next();
         });
       });
-
-      jobs.push(function(next){ specHelper.refresh(next); });
 
       jobs.push(function(next){
         var p2 = new api.models.person(person.data.guid);
@@ -358,8 +317,6 @@ describe('ah-elasticsearch-orm', function(){
         person2.data.email = e2;
         person2.create(next);
       });
-
-      jobs.push(function(next){ specHelper.ensureWrite(next); });
 
       jobs.push(function(next){
         person.data.email = e2;

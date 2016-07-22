@@ -33,6 +33,11 @@ exports.default = {
         ]
       },
 
+      // Should every create or edit signal the index to refresh
+      // this will slow your cluster down drasitically if you enable it
+      // https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-index_.html#index-refresh
+      refreshOnWrite: false,
+
       // Logger options for the elasticsearch client
       // More Information @ https://github.com/elastic/elasticsearch-js
       log: {
@@ -40,6 +45,14 @@ exports.default = {
         level: 'info',
         path: api.projectRoot + '/log/elasticsearch-' + api.env + '.log'
       }
+    };
+  }
+};
+
+exports.test = {
+  elasticsearch: function(api){
+    return {
+      refreshOnWrite: true,
     };
   }
 };
