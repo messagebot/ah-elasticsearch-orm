@@ -3,17 +3,6 @@ var fs         = require('fs');
 var util       = require('util');
 var dateformat = require('dateformat');
 
-var client = require(__dirname + '/../lib/client.js');
-
-var search      = require(__dirname + '/../lib/aggregate/search.js');
-var mget        = require(__dirname + '/../lib/aggregate/mget.js');
-var count       = require(__dirname + '/../lib/aggregate/count.js');
-var scroll      = require(__dirname + '/../lib/aggregate/scroll.js');
-var distinct    = require(__dirname + '/../lib/aggregate/distinct.js');
-var aggregation = require(__dirname + '/../lib/aggregate/aggregation.js');
-
-var elasticsearchModel = require(__dirname + '/../lib/elasticsearchModel.js');
-
 module.exports = {
   loadPriority:  100,
   startPriority: 100,
@@ -21,11 +10,22 @@ module.exports = {
 
   initialize: function(api, next){
 
+    var client = require(__dirname + '/../lib/client.js')(api);
+
+    var search      = require(__dirname + '/../lib/aggregate/search.js')(api);
+    var mget        = require(__dirname + '/../lib/aggregate/mget.js')(api);
+    var count       = require(__dirname + '/../lib/aggregate/count.js')(api);
+    var scroll      = require(__dirname + '/../lib/aggregate/scroll.js')(api);
+    var distinct    = require(__dirname + '/../lib/aggregate/distinct.js')(api);
+    var aggregation = require(__dirname + '/../lib/aggregate/aggregation.js')(api);
+
+    var elasticsearchModel = require(__dirname + '/../lib/elasticsearchModel.js')(api);
+
     ///////////////////////
     // api.elsasicsearch //
     ///////////////////////
     api.elasticsearch = {
-      client: new client(api),
+      client: new client(),
       indexes: [],
       pendingOperations: 0,
 
@@ -66,7 +66,7 @@ module.exports = {
       var thisInstance = function ElasticSearchModelInstance(guid, index, alias){
         if(!index){ index = api.env + '-' + name + '-' + dateformat(new Date(), 'yyyy-mm'); }
         if(!alias){ alias = api.env + '-' + name; }
-        api.elasticsearch.elasticsearchModel.call(this, api, modelName, guid, index, alias);
+        api.elasticsearch.elasticsearchModel.call(this, modelName, guid, index, alias);
         this.requiredFields = requiredFields;
         this.topLevelFields = topLevelFields;
       };

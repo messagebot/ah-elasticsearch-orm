@@ -67,7 +67,7 @@ describe('ah-elasticsearch-orm', function(){
           done();
         };
 
-        api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+        api.elasticsearch[q.method].apply(null, [].concat(q.args).concat([callback]));
       });
 
       it('#' + q.method + ': can load cached data', function(done){
@@ -82,7 +82,7 @@ describe('ah-elasticsearch-orm', function(){
             next();
           }
 
-          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+          api.elasticsearch[q.method].apply(null, [].concat(q.args).concat([callback]));
         });
 
         jobs.push(function(next){
@@ -94,7 +94,7 @@ describe('ah-elasticsearch-orm', function(){
             next();
           }
 
-          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+          api.elasticsearch[q.method].apply(null, [].concat(q.args).concat([callback]));
         });
 
         async.series(jobs, done);
@@ -112,7 +112,7 @@ describe('ah-elasticsearch-orm', function(){
             next();
           }
 
-          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+          api.elasticsearch[q.method].apply(null, [].concat(q.args).concat([callback]));
         });
 
         jobs.push(function(next){ setTimeout(next, 1001) });
@@ -126,7 +126,7 @@ describe('ah-elasticsearch-orm', function(){
             next();
           }
 
-          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+          api.elasticsearch[q.method].apply(null, [].concat(q.args).concat([callback]));
         });
 
         async.series(jobs, done);
@@ -144,7 +144,7 @@ describe('ah-elasticsearch-orm', function(){
             next();
           }
 
-          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+          api.elasticsearch[q.method].apply(null, [].concat(q.args).concat([callback]));
         });
 
         jobs.push(function(next){
@@ -156,7 +156,7 @@ describe('ah-elasticsearch-orm', function(){
             next();
           }
 
-          api.elasticsearch[q.method].apply(null, [api].concat(q.args).concat([callback]));
+          api.elasticsearch[q.method].apply(null, [].concat(q.args).concat([callback]));
         });
 
         async.series(jobs, done);

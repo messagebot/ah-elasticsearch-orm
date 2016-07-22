@@ -286,8 +286,7 @@ exports.personDelete = {
 ### Aggregation
 Return counts of instances based on keys you specify, over a date range.
 
-`api.elasticsearch.aggregation(api, alias, searchKeys, searchValues, start, end, dateField, agg, aggField, interval, cacheTime, callback)`
-- `api`: The API object.
+`api.elasticsearch.aggregation(alias, searchKeys, searchValues, start, end, dateField, agg, aggField, interval, cacheTime, callback)`
 - `alias`: The Alias (or specific index) you want to search in
 - `searchKeys`: An array of keys you expect to search over.
 - `searchValues`: An array of the values you want to exist for searchKeys.
@@ -304,7 +303,6 @@ An example to ask: **"How many people whose names start with the letter "E" were
 
 ```js
 api.elasticsearch.aggregation(
-  api,
   'people',
   ['guid', 'data.firstName'],
   ['_exists', 'e*'],
@@ -321,8 +319,7 @@ api.elasticsearch.aggregation(
 ### Distinct
 Count up the unique instances grouped by the key you specify
 
-`api.elasticsearch.distinct(api, alias, searchKeys, searchValues, start, end, dateField, field, cacheTime, callback)`
-- `api`: The API object.
+`api.elasticsearch.distinct(alias, searchKeys, searchValues, start, end, dateField, field, cacheTime, callback)`
 - `alias`: The Alias (or specific index) you want to search in
 - `searchKeys`: An array of keys you expect to search over.
 - `searchValues`: An array of the values you want to exist for searchKeys.
@@ -337,7 +334,6 @@ An example to ask: **"How many people whose names start with the letter "E" were
 
 ```js
 api.elasticsearch.distinct(
-  api,
   'people',
   ['guid', 'data.firstName'],
   ['_exists', 'e*'],
@@ -352,8 +348,7 @@ api.elasticsearch.distinct(
 ### Mget
 Return the hydrated results from an array of guids.
 
-`api.elasticsearch.mget(api, alias, ids, cacheTime, callback)`
-- `api`: The API object.
+`api.elasticsearch.mget(alias, ids, cacheTime, callback)`
 - `alias`: The Alias (or specific index) you want to search in
 - `ids`: An array of GUIDs
 - `cacheTime` How long to cache the results of this query for (ms) (optional)
@@ -363,7 +358,6 @@ An example to ask: **"Hydrate these person's guids: aaa, bbb, ccc"**
 
 ```js
 api.elasticsearch.mget(
-  api,
   'people',
   ['aaa', 'bbb', 'ccc'],
   callback
@@ -373,8 +367,7 @@ api.elasticsearch.mget(
 ### Count
 Return the number of instances in the index/alias, optionally filtered by a query.
 
-`api.elasticsearch.count(api, alias, searchKeys, searchValues, cacheTime, callback)`
-- `api`: The API object.
+`api.elasticsearch.count(alias, searchKeys, searchValues, cacheTime, callback)`
 - `alias`: The Alias (or specific index) you want to search in
 - `searchKeys`: An array of keys you expect to search over (can be null).
 - `searchValues`: An array of the values you want to exist for searchKeys (can be null).
@@ -385,7 +378,6 @@ An example to ask: **"How many people are there with an E first name?"**
 
 ```js
 api.elasticsearch.mget(
-  api,
   'people',
   ['data.firstName'],
   ['e*'],
@@ -397,8 +389,7 @@ api.elasticsearch.mget(
 Load all results (regardless of pagination) which match a specific ElasticSearch query.
 Note: This aggregation is never cached.
 
-`api.elasticsearch.scroll(api, alias, query, fields, cacheTime, callback)`
-- `api`: The API object.
+`api.elasticsearch.scroll(alias, query, fields, cacheTime, callback)`
 - `alias`: The Alias (or specific index) you want to search in
 - `query`: The ElasticSearch query to return the results of
 - `fields`: The fields to return (or `*`)
@@ -408,7 +399,6 @@ An example to ask: **"How many people have the firstName Evan? Get me all of the
 
 ```js
 api.elasticsearch.scroll(
-  api,
   'people',
   {"bool": {"must": [{"term": {"data.firstName": "evan"}}]}}
   ['data.email'],
@@ -419,8 +409,7 @@ api.elasticsearch.scroll(
 ### Search
 Preform a paginated ElasticSearch query, returning the total results and the requested ordered and paginated segment.
 
-`api.elasticsearch.search(api, alias, searchKeys, searchValues, from, size, sort, cacheTime, callback)`
-- `api`: The API object.
+`api.elasticsearch.search(alias, searchKeys, searchValues, from, size, sort, cacheTime, callback)`
 - `alias`: The Alias (or specific index) you want to search in
 - `searchKeys`: An array of keys you expect to search over.
 - `searchValues`: An array of the values you want to exist for searchKeys.
@@ -434,7 +423,6 @@ An example to ask: **"Show me instances #50-#100 of people whose first names sta
 
 ```js
 api.elasticsearch.search(
-  api,
   'people',
   ['guid', 'data.firstName'],
   ['_exists', 'e*'],
