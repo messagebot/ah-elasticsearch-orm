@@ -55,18 +55,19 @@ module.exports = {
       ],
 
       "properties": {
-        "guid":        { "type": "string"  },
-        "source":      { "type": "string"  },
-        "email":       { "type": "string"  },
-        "data":        { "type": "object"  },
+        // *** THESE ARE ALWAYS REQUIRED ***
+        "guid":        { "type": "string", "required": true },
+        "createdAt":   { "type":  "date", "required": true  },
+        "updatedAt":   { "type":  "date", "required": true  },
+        "data":        { "type": "object", "required": true },
 
+        "source":      { "type": "string", "required": true },
+        "email":       { "type": "string", "required": true },
         "location":    {
           "type": "geo_point",
-          "geohash_precision": (process.env.GEOHASH_PRECISION || "1km")
-        },
-
-        "createdAt":   { "type":  "date" },
-        "updatedAt":   { "type":  "date" }
+          "geohash_precision": (process.env.GEOHASH_PRECISION || "1km"),
+          "required": false
+        },        
       }
     }
   },
@@ -79,6 +80,15 @@ module.exports = {
 
 Note the use of environment variables: `GEOHASH_PRECISION`, `NUMBER_OF_SHARDS` and `NUMBER_OF_SHARDS`.  This allows you to have a simple index when developing/staging, but have a more complex deployment in production.  You can also define custom analyzers, etc.  
 The name of your index will be sourced from the file.  In the example above, the index created would be of the form `development-people-2016-07` (`api.env + '-' + name + '-' + thisMonth`).
+
+This tool allows you define if a property is `required` or not (boolean).  This data will not be sent to the ElasticSearch index, but will be used for instance validation.  Note that to use this tool properly, the follow properties are required for every model:
+
+- `"guid":        { "type": "string", "required": true }`,
+- `"createdAt":   { "type":  "date", "required": true  }`,
+- `"updatedAt":   { "type":  "date", "required": true  }`,
+- `"data":        { "type": "object", "required": true }`,
+
+The default if you don't define `required` on a property is `true`.
 
 It is safe to run the migration more than once, as indexes which already exist will be skipped.
 ```

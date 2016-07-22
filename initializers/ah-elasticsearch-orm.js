@@ -54,7 +54,13 @@ module.exports = {
       var data = require(dir + '/' + file);
       api.elasticsearch.indexes[api.env + '-' + name] = data;
       var modelName = Object.keys(data.mappings)[0];
-      var requiredFields = Object.keys(data.mappings[modelName].properties);
+      var requiredFields = [];
+      Object.keys(data.mappings[modelName].properties).forEach(function(field){
+        var props = data.mappings[modelName].properties[field];
+        if(props.required === 'true' || props.required === true || props.required === null || props.required === undefined){
+          requiredFields.push(field);
+        }
+      });
 
       var thisInstance = function ElasticSearchModelInstance(guid, index, alias){
         if(!index){ index = api.env + '-' + name + '-' + dateformat(new Date(), 'yyyy-mm'); }
