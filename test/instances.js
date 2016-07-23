@@ -237,6 +237,35 @@ describe('ah-elasticsearch-orm', function(){
       async.series(jobs, done);
     });
 
+    it('can delete an un-hydrated instnace', function(done){
+      var jobs = [];
+      var person;
+
+      jobs.push(function(next){
+        person = new api.models.person();
+        person.data.source = 'web';
+        person.data.email = 'a@fake.com';
+        person.create(next);
+      });
+
+      jobs.push(function(next){
+        var p2 = new api.models.person(person.data.guid);
+        p2.del(function(error){
+          should.not.exist(error);
+          next();
+        });
+      });
+
+      jobs.push(function(next){
+        person.hydrate(function(error){
+          error.message.should.equal('person (' + person.data.guid + ') not found')
+          next();
+        });
+      });
+
+      async.series(jobs, done);
+    });
+
     it('can edit an instnace (simple)', function(done){
       var jobs = [];
       var person;
