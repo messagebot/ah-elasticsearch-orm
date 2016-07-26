@@ -6,11 +6,11 @@ An Elasticsearch ORM for [ActionHero](http://www.actionherojs.com)
 
 ## Versions Supported
 
-| Sorftware     | Version   |
+| Software      | Version   |
 |---------------|-----------|
-| ActionHero    | >= 14.0.0 |
+| ActionHero    | >=14.0.0  |
 | Node.JS       | >=4.0.0   |
-| ElasticSearch | >= 2.0.0  |
+| ElasticSearch | >=2.0.0   |
 
 ## Migrations and Defintions.
 
