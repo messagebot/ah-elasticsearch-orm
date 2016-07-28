@@ -2,8 +2,8 @@
 
 var optimist = require('optimist');
 
-var action = 'help';
-if(optimist.argv._[0]){ action = optimist.argv._[0]; }
+var method = 'help';
+if(optimist.argv._[0]){ method = optimist.argv._[0]; }
 
 var exit = function(error){
   var returnCode = 0;
@@ -26,7 +26,7 @@ logger('ah-elasticsearch-orm');
 logger('---------------------')
 
 try{
-  require(__dirname + '/actions/' + action + '.js')(logger, exit);
+  require(__dirname + '/methods/' + method + '.js')(logger, exit);
 }catch(e){
-  exit(new Error('`' + action + '` is not an action I can perform'));
+  exit(new Error('`' + method + '` is not an method I can perform'));
 }
