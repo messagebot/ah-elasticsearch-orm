@@ -26,7 +26,7 @@ var migrate = function(logger, callback){
       var name = nameParts[(nameParts.length - 1)].split(".")[0];
       var now = new Date();
       var thisMonth = dateformat(now, 'yyyy-mm');
-      var nextMonth = dateformat(new Date( now.getTime() + (1000 * 60 * 60 * 24 * 30) ), 'yyyy-mm');
+      var nextMonth = dateformat(new Date( now.getTime() + (1000 * 60 * 60 * 24 * 31) ), 'yyyy-mm');
 
       delete require.cache[require.resolve(dir + '/' + file)];
       var payload = require(dir + '/' + file);

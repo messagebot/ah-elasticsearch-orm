@@ -4,13 +4,13 @@ var dateformat = require('dateformat');
 var specHelper = require(__dirname + '/specHelper.js').specHelper;
 var now = new Date();
 var thisMonth = dateformat(now, 'yyyy-mm');
-var nextMonth = dateformat(new Date( now.getTime() + (1000 * 60 * 60 * 24 * 30) ), 'yyyy-mm');
+var nextMonth = dateformat(new Date( now.getTime() + (1000 * 60 * 60 * 24 * 31) ), 'yyyy-mm');
 var api;
 
 describe('ah-elasticsearch-orm', function(){
   describe('migrations', function(){
     before(function(){ api = specHelper.api; });
-    
+
     before(function(done){
       specHelper.doBash('curl -X DELETE http://localhost:9200/test-people-' + thisMonth + ' && curl -X DELETE http://localhost:9200/test-people-' + nextMonth + ' && sleep 5', done, true);
     })
