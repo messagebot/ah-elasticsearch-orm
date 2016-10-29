@@ -109,16 +109,14 @@ describe('ah-elasticsearch-orm', function(){
 
     it('#scroll (full)', function(done){
       var query = {
-        "query": {
-          "bool": {
-            "must": [
-              {
-                "exists": {
-                  "field": "email"
-                }
+        "bool": {
+          "must": [
+            {
+              "exists": {
+                "field": "email"
               }
-            ]
-          }
+            }
+          ]
         }
       };
 
@@ -137,16 +135,14 @@ describe('ah-elasticsearch-orm', function(){
 
     it('#scroll (empty)', function(done){
       var query = {
-        "query": {
-          "bool": {
-            "must": [
-              {
-                "exists": {
-                  "field": "bacon"
-                }
+        "bool": {
+          "must": [
+            {
+              "exists": {
+                "field": "bacon"
               }
-            ]
-          }
+            }
+          ]
         }
       };
 

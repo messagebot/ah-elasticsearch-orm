@@ -38,6 +38,7 @@ var specHelper = {
 
     if(process.env.SKIP_BUILD !== 'true'){
       jobs.push(function(done){ console.log('-------- BUILDING PROJECT --------'); done(); })
+      jobs.push(function(done){ console.log('  In the future, you can skip the build with `SKIP_BUILD=true`\r\n'); done(); })
       commands.forEach(function(cmd){
         jobs.push(function(done){ self.doBash(cmd, done); })
       });
