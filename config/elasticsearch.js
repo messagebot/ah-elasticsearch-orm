@@ -1,7 +1,7 @@
 var urls = process.env.ELASTICSEARCH_URLS ? process.env.ELASTICSEARCH_URLS.split(',') : ['http://localhost:9200']
 
 exports.default = {
-  elasticsearch: function(api){
+  elasticsearch: function (api) {
     return {
       // what are the elasticsearch server's URL(s)?
       urls: urls,
@@ -27,9 +27,9 @@ exports.default = {
       // These uniqueFields can be either at the top level of your object or part of the data hash
       // If an object is found, a failure will be returned
       uniqueFields: {
-        person: [
+        Person: [
           'email',
-          'guid',
+          'guid'
         ]
       },
 
@@ -45,14 +45,14 @@ exports.default = {
         level: 'info',
         path: api.projectRoot + '/log/elasticsearch-' + api.env + '.log'
       }
-    };
+    }
   }
-};
+}
 
 exports.test = {
-  elasticsearch: function(api){
+  elasticsearch: function (api) {
     return {
-      refreshOnWrite: true,
-    };
+      refreshOnWrite: true
+    }
   }
-};
+}

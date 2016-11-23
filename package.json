@@ -2,7 +2,7 @@
   "author": "Evan Tahler <evan@delicioushat.com>",
   "name": "ah-elasticsearch-orm",
   "description": "An Elasticsearch ORM for ActionHero Projects.  Provides CRUD instance methods, finders, updates, and collection abstractions",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -31,16 +31,26 @@
     "uuid": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^3.0.1",
     "mocha": "^3.0.0",
-    "should": "^11.0.0"
+    "should": "^11.0.0",
+    "standard": "^8.5.0"
   },
   "optionalDependencies": {},
   "bin": {
     "ah-elasticsearch-orm": "./bin/ah-elasticsearch-orm"
   },
+  "standard": {
+    "globals": [
+      "describe",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it"
+    ]
+  },
   "scripts": {
-    "test": "NODE_ENV=test mocha",
+    "test": "standard && NODE_ENV=test mocha",
     "test:skip-build": "SKIP_BUILD=true NODE_ENV=test mocha"
   }
 }

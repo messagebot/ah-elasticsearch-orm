@@ -1,32 +1,33 @@
 #!/usr/bin/env node
 
-var optimist = require('optimist');
+var optimist = require('optimist')
+var path = require('path')
 
-var method = 'help';
-if(optimist.argv._[0]){ method = optimist.argv._[0]; }
+var method = 'help'
+if (optimist.argv._[0]) { method = optimist.argv._[0] }
 
-var exit = function(error){
-  var returnCode = 0;
-  if(error){
-    logger(error);
-    returnCode = 1;
+var exit = function (error) {
+  var returnCode = 0
+  if (error) {
+    logger(error)
+    returnCode = 1
   }
 
-  setTimeout(function(){
-    process.exit(returnCode);
-  }, 500);
-};
+  setTimeout(function () {
+    process.exit(returnCode)
+  }, 500)
+}
 
-var logger = function(msg){
-  if(require.main === module){ console.log(msg); }
-};
+var logger = function (msg) {
+  if (require.main === module) { console.log(msg) }
+}
 
 logger('---------------------')
-logger('ah-elasticsearch-orm');
+logger('ah-elasticsearch-orm')
 logger('---------------------')
 
-try{
-  require(__dirname + '/methods/' + method + '.js')(logger, exit);
-}catch(e){
-  exit(new Error('`' + method + '` is not an method I can perform'));
+try {
+  require(path.join(__dirname, 'methods', method + '.js'))(logger, exit)
+} catch (e) {
+  exit(new Error('`' + method + '` is not an method I can perform'))
 }
