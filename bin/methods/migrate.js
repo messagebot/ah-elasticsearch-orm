@@ -11,7 +11,7 @@ function capitalize (string) {
 }
 
 var migrate = function (logger, callback) {
-  var ActionHeroPrototype = require(process.cwd() + '/node_modules/actionhero/actionhero.js').actionheroPrototype
+  var ActionHeroPrototype = require(process.cwd() + '/node_modules/actionhero/actionhero.js')
   var actionhero = new ActionHeroPrototype()
   var configChanges = {
     logger: { transports: null },
