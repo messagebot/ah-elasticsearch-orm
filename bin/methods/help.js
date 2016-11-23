@@ -1,10 +1,9 @@
-var help = function(logger, callback){
+var help = function (logger, callback) {
+  logger('Actions:')
+  logger('-- help')
+  logger('-- migrate')
 
-  logger('Actions:');
-  logger('-- help');
-  logger('-- migrate');
-
-  return callback();
+  return callback()
 }
 
-module.exports = help;
+module.exports = help

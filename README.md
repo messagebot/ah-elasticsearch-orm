@@ -170,7 +170,7 @@ exports.personCreate = {
   },
 
   run: function(api, data, next){
-    var person = new api.models.person();
+    var person = new api.models.Person();
     if(data.params.guid){        person.data.guid = data.params.guid;           }
     if(data.params.source){      person.data.source = data.params.source;       }
     if(data.params.createdAt){   person.data.createdAt = data.params.createdAt; }
@@ -450,7 +450,7 @@ If you choose `'delay'`, then the request will be retried after a time defined b
 - On a search or aggregation, setting a searchKey to a string which contains `"*"` will trigger a wildcard search rather than a term search.
 
 ## Notes:
-- `api.models` is where constructors for instances live, ie: `new api.models.person()`
+- `api.models` is where constructors for instances live, ie: `new api.models.Person()`
 - `guid` is a unique primary key for all instances, and it is set to `_id` for the ElasticSearch instance.
 - By default, all instances will have a `createdAt` and `updatedAt` property at the top of the _source.
 - When searching, always use lower-case letters.  See the example analyzer for a hint at performing normal string searches.
