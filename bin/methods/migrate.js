@@ -4,6 +4,11 @@ var async = require('async')
 var dateformat = require('dateformat')
 var request = require('request')
 var prefix = process.env.PREFIX
+var type
+
+function capitalize (string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+}
 
 var migrate = function (logger, callback) {
   var ActionHeroPrototype = require(process.cwd() + '/node_modules/actionhero/actionhero.js').actionheroPrototype
@@ -31,9 +36,9 @@ var migrate = function (logger, callback) {
       var payload = require(dir + '/' + file)
 
       // strip out custom data we've added to the payload
-      for (var t in payload.mappings) {
-        for (var p in payload.mappings[t].properties) {
-          var property = payload.mappings[t].properties[p]
+      for (type in payload.mappings) {
+        for (var p in payload.mappings[type].properties) {
+          var property = payload.mappings[type].properties[p]
           delete property.required
         }
       }
@@ -68,6 +73,10 @@ var migrate = function (logger, callback) {
             // The ES client in v10.0.0 does not suppor much of the metatdata we need :(
             // payload.index = i;
             // api.elasticsearch.client.indices.create(payload, next);
+            for (type in payload.mappings) {
+              payload.mappings[capitalize(type)] = payload.mappings[type]
+              delete payload.mappings[type]
+            }
 
             request.put(api.config.elasticsearch.urls[0] + '/' + i, {form: JSON.stringify(payload)}, function (error, data) {
               if (error) { return next(error) }
