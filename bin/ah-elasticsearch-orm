@@ -27,7 +27,7 @@ logger('ah-elasticsearch-orm')
 logger('---------------------')
 
 try {
-  require(path.join(__dirname, 'methods' + method + '.js'))(logger, exit)
+  require(path.join(__dirname, 'methods', method + '.js'))(logger, exit)
 } catch (e) {
   exit(new Error('`' + method + '` is not an method I can perform'))
 }

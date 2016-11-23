@@ -33,7 +33,7 @@ describe('ah-elasticsearch-orm', function () {
         var p2 = new api.models.Person(person.data.guid)
         p2.hydrate(function (error) {
           should.not.exist(error)
-          p2.type.should.equal('person')
+          p2.type.should.equal('Person')
           p2.index.should.equal(index)
           p2.alias.should.equal('test-people')
           dateformat(p2.data.createdAt, 'yyyy-mm-dd').should.equal(dateformat(new Date(), 'yyyy-mm-dd'))
@@ -78,7 +78,7 @@ describe('ah-elasticsearch-orm', function () {
         var p2 = new api.models.Person(person.data.guid)
         p2.hydrate(function (error) {
           should.not.exist(error)
-          p2.type.should.equal('person')
+          p2.type.should.equal('Person')
           p2.index.should.equal(index)
           p2.alias.should.equal('test-people');
           (p2.data.createdAt.getTime()).should.equal((new Date(100)).getTime()) // custom createdAt
@@ -230,7 +230,7 @@ describe('ah-elasticsearch-orm', function () {
 
       jobs.push(function (next) {
         person.hydrate(function (error) {
-          error.message.should.equal('person (' + person.data.guid + ') not found')
+          error.message.should.equal('Person (' + person.data.guid + ') not found')
           next()
         })
       })
@@ -259,7 +259,7 @@ describe('ah-elasticsearch-orm', function () {
 
       jobs.push(function (next) {
         person.hydrate(function (error) {
-          error.message.should.equal('person (' + person.data.guid + ') not found')
+          error.message.should.equal('Person (' + person.data.guid + ') not found')
           next()
         })
       })

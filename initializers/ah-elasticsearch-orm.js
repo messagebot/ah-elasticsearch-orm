@@ -3,6 +3,10 @@ var fs = require('fs')
 var util = require('util')
 var dateformat = require('dateformat')
 
+function capitalize (string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+}
+
 module.exports = {
   loadPriority: 100,
   startPriority: 100,
@@ -49,22 +53,30 @@ module.exports = {
 
     fs.readdirSync(dir).forEach(function (file) {
       var nameParts = file.split('/')
-      var name = nameParts[(nameParts.length - 1)].split('.')[0]
+      var name = capitalize(nameParts[(nameParts.length - 1)].split('.')[0])
       var data = require(dir + '/' + file)
-      api.elasticsearch.indexes[api.env + '-' + name] = data
-      var modelName = Object.keys(data.mappings)[0]
+      api.elasticsearch.indexes[api.env + '-' + name.toLowerCase()] = data
+      var modelName = capitalize(Object.keys(data.mappings)[0])
       var requiredFields = []
-      var topLevelFields = Object.keys(data.mappings[modelName].properties)
-      Object.keys(data.mappings[modelName].properties).forEach(function (field) {
-        var props = data.mappings[modelName].properties[field]
+
+      var properties = {}
+      if (data.mappings[modelName]) {
+        properties = data.mappings[modelName].properties
+      } else {
+        properties = data.mappings[modelName.toLowerCase()].properties
+      }
+
+      var topLevelFields = Object.keys(properties)
+      Object.keys(properties).forEach(function (field) {
+        var props = properties[field]
         if (props.required === 'true' || props.required === true || props.required === null || props.required === undefined) {
           requiredFields.push(field)
         }
       })
 
       var thisInstance = function ElasticSearchModelInstance (guid, index, alias) {
-        if (!index) { index = api.env + '-' + name + '-' + dateformat(new Date(), 'yyyy-mm') }
-        if (!alias) { alias = api.env + '-' + name }
+        if (!index) { index = api.env + '-' + name.toLowerCase() + '-' + dateformat(new Date(), 'yyyy-mm') }
+        if (!alias) { alias = api.env + '-' + name.toLowerCase() }
         api.elasticsearch.elasticsearchModel.call(this, modelName, guid, index, alias)
         this.requiredFields = requiredFields
         this.topLevelFields = topLevelFields

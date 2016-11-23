@@ -27,7 +27,7 @@ exports.default = {
       // These uniqueFields can be either at the top level of your object or part of the data hash
       // If an object is found, a failure will be returned
       uniqueFields: {
-        person: [
+        Person: [
           'email',
           'guid'
         ]
