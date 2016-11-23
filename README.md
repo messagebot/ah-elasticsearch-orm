@@ -212,7 +212,7 @@ exports.personEdit = {
   },
 
   run: function(api, data, next){
-    var person = new api.models.person(data.params.guid);
+    var person = new api.models.Person(data.params.guid);
     if(data.params.source){ person.data.source = data.params.source; }
 
     for(var i in data.params.data){ person.data[i] = data.params.data[i]; }
@@ -243,7 +243,7 @@ exports.personView = {
   },
 
   run: function(api, data, next){
-    var person = new api.models.person(data.params.guid);
+    var person = new api.models.Person(data.params.guid);
     person.hydrate(function(error){
       if(error){ return next(error); }
       data.response.person = person.data;
@@ -270,7 +270,7 @@ exports.personDelete = {
   },
 
   run: function(api, data, next){
-    var person = new api.models.person(data.params.guid);
+    var person = new api.models.Person(data.params.guid);
     // load the instance to be sure it exists
     person.hydrate(function(error){
       if(error){ return next(error); }
