@@ -11,6 +11,9 @@ os:
   # - osx
   # - windows
 
+jdk:
+  - oraclejdk8
+
 script: npm run test
 
 env:
