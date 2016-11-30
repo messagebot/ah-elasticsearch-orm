@@ -26,3 +26,4 @@ before_install:
   - sudo service elasticsearch restart
   # ES needs some time to start
   - sleep 15
+  - curl http://localhost:9200
