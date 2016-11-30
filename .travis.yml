@@ -15,7 +15,7 @@ script: npm run test
 
 env:
   - "ES_VERSION=2.3.4"
-  # - "ES_VERSION=5.0.0-alpha4"
+  - "ES_VERSION=5.0.2"
 
 before_install:
   ## ES has different download locations for each version, so we'll download them both and then just use the one we want
