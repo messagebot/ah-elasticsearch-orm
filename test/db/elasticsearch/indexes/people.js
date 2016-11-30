@@ -7,8 +7,8 @@ module.exports = {
   'mappings': {
     'person': {
       'properties': {
-        'guid': { 'type': 'string', 'required': true },
-        'source': { 'type': 'string', 'required': true },
+        'guid': { 'type': 'keyword', 'required': true },
+        'source': { 'type': 'keyword', 'required': true },
         'email': {
           'type': 'string',
           'index': 'not_analyzed'
