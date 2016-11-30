@@ -11,6 +11,11 @@ os:
   # - osx
   # - windows
 
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
 script: npm run test
 
 env:
