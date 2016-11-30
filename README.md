@@ -56,12 +56,12 @@ module.exports = {
 
       "properties": {
         // *** THESE ARE ALWAYS REQUIRED ***
-        "guid":        { "type": "string", "required": true },
+        "guid":        { "type": "keyword", "required": true },
         "createdAt":   { "type":  "date", "required": true  },
         "updatedAt":   { "type":  "date", "required": true  },
         "data":        { "type": "object", "required": true },
 
-        "source":      { "type": "string", "required": true },
+        "source":      { "type": "keyword", "required": true },
         "email":       { "type": "string", "required": true },
         "location":    {
           "type": "geo_point",
