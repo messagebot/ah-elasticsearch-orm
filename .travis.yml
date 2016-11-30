@@ -11,9 +11,6 @@ os:
   # - osx
   # - windows
 
-jdk:
-  - oraclejdk8
-
 script: npm run test
 
 env:
@@ -21,6 +18,7 @@ env:
   - "ES_VERSION=5.0.2 ES_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.0.2.deb"
 
 before_install:
+  - jdk_switcher use oraclejdk8
   ## ES has different download locations for each version, so we'll download them both and then just use the one we want
   - curl $ES_DOWNLOAD_URL > elasticsearch_package.deb
   ## Now, use the ENV to choose the version
