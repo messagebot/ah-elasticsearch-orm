@@ -46,8 +46,11 @@ describe('ah-elasticsearch-orm', function () {
         fromCache.should.equal(false)
         data.buckets.length.should.equal(1)
         data.buckets[0].doc_count.should.equal(10)
-        var key = data.buckets[0].key_as_string;
-        (key.split(' ')[0]).should.equal(dateformat(now, 'yyyy-mm-dd'))
+        var key = data.buckets[0].key_as_string
+        var dateES = (key.split(' ')[0])
+        var tommorow = new Date(now.getTime() + (24 * 60 * 60 * 1000))
+        var matches = [dateformat(now, 'yyyy-mm-dd'), dateformat(tommorow, 'yyyy-mm-dd')]
+        matches.should.containEql(dateES)
         done()
       })
     })

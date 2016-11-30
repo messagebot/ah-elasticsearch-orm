@@ -11,18 +11,26 @@ os:
   # - osx
   # - windows
 
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+      - oracle-java8-set-default
+
 script: npm run test
 
 env:
-  - "ES_VERSION=2.3.4"
-  # - "ES_VERSION=5.0.0-alpha4"
+  matrix:
+    - "ES_VERSION=2.3.4 ES_DOWNLOAD_URL=https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.3.4/elasticsearch-2.3.4.deb"
+    - "ES_VERSION=5.0.2 ES_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.0.2.deb"
 
 before_install:
   ## ES has different download locations for each version, so we'll download them both and then just use the one we want
-  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/$ES_VERSION/elasticsearch-$ES_VERSION.deb
+  - curl $ES_DOWNLOAD_URL > elasticsearch_package.deb
   ## Now, use the ENV to choose the version
-  - sudo dpkg -i --force-confnew elasticsearch-$ES_VERSION.deb
-  - 'echo -e "index.number_of_shards: 1\nindex.number_of_replicas: 0" | sudo tee -a /etc/elasticsearch/elasticsearch.yml'
+  - sudo dpkg -i --force-confnew elasticsearch_package.deb
   - sudo service elasticsearch restart
   # ES needs some time to start
   - sleep 15
+  - curl http://localhost:9200
+  # - curl -XPUT 'http://localhost:9200/_all/_settings?preserve_existing=true' -d '{"index.number_of_replicas" : "0","index.number_of_shards" : "1"}'
