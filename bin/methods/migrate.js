@@ -55,8 +55,8 @@ var migrate = function (logger, callback) {
       var indexNameBase = api.env + '-' + name
       if (prefix && prefix.length > 0) { indexNameBase = prefix + '-' + indexNameBase }
 
-      indexes[indexNameBase + '-' + thisMonth] = payload
-      indexes[indexNameBase + '-' + nextMonth] = payload
+      indexes[indexNameBase + '-' + thisMonth] = JSON.parse(JSON.stringify(payload))
+      indexes[indexNameBase + '-' + nextMonth] = JSON.parse(JSON.stringify(payload))
     })
 
     var migrationJobs = []
