@@ -24,7 +24,7 @@ describe('ah-elasticsearch-orm', function () {
         person.data.email = specHelper.email()
         person.create(function (error) {
           should.not.exist(error)
-          person.data.guid.should.exist
+          person.data.guid.should.exist // eslint-disable-line
           next()
         })
       })
@@ -69,7 +69,7 @@ describe('ah-elasticsearch-orm', function () {
         }
         person.create(function (error) {
           should.not.exist(error)
-          person.data.guid.should.exist
+          person.data.guid.should.exist // eslint-disable-line
           next()
         })
       })
