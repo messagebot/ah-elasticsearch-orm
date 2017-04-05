@@ -5,7 +5,7 @@ var exec = require('child_process').exec
 
 var specHelper = {
   // testDir: '/tmp/ah-elasticsearch-orm',
-  testDir: os.tmpDir() + '/ah-elasticsearch-orm',
+  testDir: os.tmpdir() + '/ah-elasticsearch-orm',
   projectDir: path.normalize(path.join(__dirname, '..')),
   built: false,
 
